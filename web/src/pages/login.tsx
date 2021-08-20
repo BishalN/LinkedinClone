@@ -1,7 +1,6 @@
 import { useRouter } from "next/dist/client/router";
 import React from "react";
 import { Button } from "../components/Button";
-import { HeroSvg } from "../components/HeroSvg";
 import { Input } from "../components/Input";
 import { Layout } from "../components/Layout";
 import LogoSvg from "../components/LogoSvg";
@@ -41,7 +40,10 @@ const Register: React.FC = () => {
           </form>
         </section>
 
-        <HeroSvg className="hidden lg:block max-w-xl self-center mt-10 ml-20" />
+        <img
+          src="https://static-exp1.licdn.com/sc/h/dxf91zhqd2z6b0bwg85ktm5s4"
+          className="hidden lg:block max-w-xl ml-20 -mt-5"
+        />
       </main>
     </Layout>
   );
