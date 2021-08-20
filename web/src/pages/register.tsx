@@ -1,70 +1,61 @@
 import React from "react";
-import { HeroSvg } from "../components/HeroSvg";
+import Link from "next/link";
+import { FcGoogle } from "react-icons/fc";
+
+import { Button } from "../components/Button";
+import { Input } from "../components/Input";
 import { Layout } from "../components/Layout";
 import LogoSvg from "../components/LogoSvg";
 
-const Register: React.FC = () => {
+const login: React.FC = () => {
   return (
-    <Layout>
-      <nav className="flex mt-5 justify-between items-center">
-        <LogoSvg />
+    <div className="bg-gray-100">
+      <Layout>
+        <main className="flex justify-center items-center flex-col h-screen space-y-5">
+          <LogoSvg />
+          <h1 className="text-3xl text-center">
+            Make the most of your professional life
+          </h1>
 
-        <div className="space-x-2 sm:space-x-10">
-          {/* Ghost button */}
-          <button
-            className="text-gray-500
-           hover:bg-gray-200 px-4 focus:ring-2 rounded-sm p-2 "
-          >
-            Join Now
-          </button>
-          {/* outlined button */}
-          <button
-            className="border-2 px-4 p-2 hover:bg-gray-100 focus:ring-2
-            rounded-full border-blue-500"
-          >
-            Sign in
-          </button>
-        </div>
-      </nav>
-
-      <main className="mt-20">
-        <h1 className="text-blue-500 text-5xl max-w-lg leading-snug">
-          Welcome to your professional community
-        </h1>
-
-        <form
-          autoComplete="off"
-          autoCorrect="off"
-          autoCapitalize="off"
-          className="mt-10 flex flex-col space-y-5 max-w-md"
-        >
-          <input
-            type="text"
-            placeholder="Email address"
-            className="border-2 p-3 border-gray-500 border-transparent focus:border-transparent
-            focus:outline-none focus:ring-2 focus:ring-blue-500  rounded-sm "
-          />
-          <input
-            type="password"
-            placeholder="Password"
-            className="border-2 p-3 border-gray-500 border-transparent focus:border-transparent
-            focus:outline-none focus:ring-2 focus:ring-blue-500  rounded-sm "
-          />
-
-          <button
-            type="submit"
-            className="border-2 px-4 p-2 bg-blue-700 hover:bg-blue-900 text-white focus:ring-2
-            rounded-2xl border-blue-500"
-          >
-            Sign in
-          </button>
-        </form>
-      </main>
-      {/* <div>
-        <HeroSvg />
-      </div> */}
-    </Layout>
+          <div className="bg-white h-auto py-7 w-full sm:w-8/12 xl:w-5/12 rounded-xl">
+            <form className="w-full flex flex-col items-center justify-center h-full space-y-5">
+              <Input
+                type="text"
+                placeholder="Email address"
+                className="w-11/12 border-opacity-50"
+              />
+              <Input
+                type="text"
+                placeholder="Password"
+                className="w-11/12  border-opacity-50"
+              />
+              <span className="text-center text-xs w-9/12">
+                By clicking Agree & Join, you agree to the LinkedIn User
+                Agreement, Privacy Policy, and Cookie Policy.
+              </span>
+              <Button variant="filled" className="w-1/2">
+                Agree & Join
+              </Button>
+              <div className="w-full border-b-8"></div>
+              <Button
+                variant="outlined"
+                className="w-11/12 text-lg text-blue-500"
+                icon={<FcGoogle size={30} />}
+              >
+                Join with google
+              </Button>
+              <p>
+                Already on linked in?{" "}
+                <Link href="/login">
+                  <span className="text-blue-500 cursor-pointer">Sign in?</span>
+                </Link>
+              </p>
+            </form>
+          </div>
+        </main>
+      </Layout>
+    </div>
   );
 };
 
-export default Register;
+export default login;

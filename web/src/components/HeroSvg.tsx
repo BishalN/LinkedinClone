@@ -1,13 +1,23 @@
-import React from "react";
+import { type } from "node:os";
+import React, {
+  ReactHTMLElement,
+  SVGAttributes,
+  DetailedHTMLProps,
+} from "react";
 
-export function HeroSvg() {
+export type HeroSvgProps = DetailedHTMLProps<
+  SVGAttributes<HTMLOrSVGElement>,
+  HTMLOrSVGElement
+>;
+
+export const HeroSvg: React.FC<HeroSvgProps> = ({ className }) => {
   return (
     <svg
       data-name="Layer 1"
       xmlns="http://www.w3.org/2000/svg"
-      width="725.856"
+      width="700.856"
       height="493.826"
-      className="text-blue-500 "
+      className={className}
     >
       <path
         d="M9.653 37.93h188.55a9.664 9.664 0 019.653 9.653v279.59a9.664 9.664 0 01-9.653 9.653H9.653A9.664 9.664 0 010 327.173V47.583a9.664 9.664 0 019.653-9.653z"
@@ -143,4 +153,4 @@ export function HeroSvg() {
       />
     </svg>
   );
-}
+};

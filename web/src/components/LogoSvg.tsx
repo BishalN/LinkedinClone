@@ -5,8 +5,9 @@ export function LogoSvg() {
     <svg
       xmlns="http://www.w3.org/2000/svg"
       viewBox="0 0 84 21"
+      color="#3B82F6"
       preserveAspectRatio="xMinYMin meet"
-      className="max-h-8 max-w-8"
+      className="max-h-8 max-w-8 fill-current"
     >
       <g className="inbug" fill="none" fillRule="evenodd">
         <path

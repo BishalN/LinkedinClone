@@ -25,7 +25,7 @@ export type ButtonProps = DetailedHTMLProps<
   variant?: keyof typeof varaintsClassNames;
   loading?: boolean;
   icon?: ReactNode;
-  transition: boolean;
+  transition?: boolean;
 };
 
 export const Button: React.FC<ButtonProps> = ({
@@ -42,7 +42,7 @@ export const Button: React.FC<ButtonProps> = ({
   return (
     <button
       disabled={disabled || loading}
-      className={`flex outline-none focus:ring-2 focus:ring-blue-500 
+      className={`flex justify-center outline-none focus:ring-2 focus:ring-blue-500 
       ${sizeClassNames[size]} ${
         transition ? `transition duration-200 ease-in-out` : ``
       } ${varaintsClassNames[variant]} ${className} `}
