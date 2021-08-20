@@ -6,8 +6,52 @@ import { Button } from "../components/Button";
 import { Input } from "../components/Input";
 import { Layout } from "../components/Layout";
 import LogoSvg from "../components/LogoSvg";
+import { useState } from "react";
+import { useEffect } from "react";
+import firebase from "firebase";
+import { Alert } from "../components/Alert";
+import { Router, useRouter } from "next/dist/client/router";
 
-const login: React.FC = () => {
+const register: React.FC = () => {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState({ code: "", message: "" });
+  const [loading, setLoading] = useState(false);
+
+  const router = useRouter();
+
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    setLoading(true);
+    e.preventDefault();
+    //reset the error State
+    setError({ code: "", message: "" });
+
+    if (email.length === 0) {
+      setLoading(false);
+      return setError({ code: "email/required", message: "Email is required" });
+    } else if (password.length === 0) {
+      setLoading(false);
+      return setError({
+        code: "password/required",
+        message: "Password is required",
+      });
+    }
+
+    firebase
+      .auth()
+      .createUserWithEmailAndPassword(email, password)
+      .then((value) => {
+        console.log(value);
+        setLoading(false);
+        router.push(`/dash/?email=${value.user?.email}`);
+      })
+      .catch((err) => {
+        setError(err);
+        setLoading(false);
+        setEmail("");
+        setPassword("");
+      });
+  };
   return (
     <div className="bg-gray-100">
       <Layout>
@@ -18,14 +62,28 @@ const login: React.FC = () => {
           </h1>
 
           <div className="bg-white h-auto py-7 w-full sm:w-8/12 xl:w-5/12 rounded-xl">
-            <form className="w-full flex flex-col items-center justify-center h-full space-y-5">
+            <form
+              onSubmit={handleSubmit}
+              className="w-full flex flex-col items-center justify-center h-full space-y-5"
+            >
+              {error.message.length > 0 && (
+                <Alert
+                  variant="failure"
+                  message={error.message}
+                  className="self-start ml-3"
+                />
+              )}
               <Input
                 type="text"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
                 placeholder="Email address"
                 className="w-11/12 border-opacity-50"
               />
               <Input
                 type="text"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
                 placeholder="Password"
                 className="w-11/12  border-opacity-50"
               />
@@ -33,7 +91,12 @@ const login: React.FC = () => {
                 By clicking Agree & Join, you agree to the LinkedIn User
                 Agreement, Privacy Policy, and Cookie Policy.
               </span>
-              <Button variant="filled" className="w-1/2">
+              <Button
+                type="submit"
+                variant="filled"
+                className="w-1/2"
+                loading={loading}
+              >
                 Agree & Join
               </Button>
               <div className="w-full border-b-8"></div>
@@ -58,4 +121,4 @@ const login: React.FC = () => {
   );
 };
 
-export default login;
+export default register;
