@@ -10,7 +10,7 @@ const Register: React.FC = () => {
   const router = useRouter();
   return (
     <Layout>
-      <nav className="flex mt-5 justify-between items-center ">
+      <nav className="flex mt-5 justify-between items-center px-2">
         <LogoSvg />
         <div className="flex space-x-2 sm:space-x-10">
           <Button variant="ghost" onClick={() => router.push("/register")}>
@@ -20,9 +20,9 @@ const Register: React.FC = () => {
         </div>
       </nav>
 
-      <main className="mt-20 flex">
-        <section id="Login">
-          <h1 className="text-blue-500 text-5xl max-w-lg leading-snug">
+      <main className="mt-20 flex w-screen px-2">
+        <section id="Login" className="">
+          <h1 className="text-blue-500 text-2xl text-center sm:text-left  sm:text-5xl max-w-lg leading-snug ">
             Welcome to your professional community
           </h1>
 
@@ -40,6 +40,8 @@ const Register: React.FC = () => {
             </Button>
           </form>
         </section>
+
+        <HeroSvg className="hidden lg:block max-w-xl self-center mt-10 ml-20" />
       </main>
     </Layout>
   );

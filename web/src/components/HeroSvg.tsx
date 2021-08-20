@@ -15,8 +15,9 @@ export const HeroSvg: React.FC<HeroSvgProps> = ({ className }) => {
     <svg
       data-name="Layer 1"
       xmlns="http://www.w3.org/2000/svg"
-      width="700.856"
-      height="493.826"
+      // width="700.856"
+      // height="493.826"
+      viewBox="4 8 845 818"
       className={className}
     >
       <path
