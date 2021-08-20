@@ -1,12 +1,69 @@
 import { useRouter } from "next/dist/client/router";
 import React from "react";
+import { FcGoogle } from "react-icons/fc";
+
+import { useState } from "react";
+import { Alert } from "../components/Alert";
 import { Button } from "../components/Button";
 import { Input } from "../components/Input";
 import { Layout } from "../components/Layout";
 import LogoSvg from "../components/LogoSvg";
+import { useIsAuth } from "../hooks/useIsAuthenticated";
+import firebase from "../utils/initFirebase";
 
-const Register: React.FC = () => {
+const login: React.FC = () => {
+  // if already authenticated push to the dash
+  useIsAuth();
   const router = useRouter();
+
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState({ code: "", message: "" });
+  const [loading, setLoading] = useState(false);
+
+  const handleSignInWithGoogle = () => {
+    setError({ code: "", message: "" });
+
+    let provider = new firebase.auth.GoogleAuthProvider();
+    provider.addScope("https://www.googleapis.com/auth/contacts.readonly");
+    firebase
+      .auth()
+      .signInWithPopup(provider)
+      .then((value) => {
+        console.log(value);
+        router.push(`/dash/?email=${value.user?.email}`);
+      })
+      .catch((err) => setError(err));
+  };
+
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setError({ code: "", message: "" });
+    setLoading(true);
+
+    if (email.length === 0) {
+      return setError({ message: "Email is required", code: "email/required" });
+    } else if (password.length === 0) {
+      return setError({
+        message: "Password is required",
+        code: "password/required",
+      });
+    }
+
+    firebase
+      .auth()
+      .signInWithEmailAndPassword(email, password)
+      .then((value) => {
+        console.log(value);
+        router.push(`/dash/?email=${value.user?.email}`);
+        setLoading(false);
+      })
+      .catch((err) => {
+        setError(err);
+        console.log(err);
+        setLoading(false);
+      });
+  };
   return (
     <Layout>
       <nav className="flex mt-5 justify-between items-center px-2">
@@ -26,16 +83,38 @@ const Register: React.FC = () => {
           </h1>
 
           <form
+            onSubmit={handleSubmit}
             autoComplete="off"
             autoCorrect="off"
             autoCapitalize="off"
             className="mt-10 flex flex-col space-y-5 max-w-md"
           >
-            <Input type="text" placeholder="Email address" />
-            <Input type="password" placeholder="Password" />
+            {error.message.length > 0 && (
+              <Alert variant="failure" message={error.message} />
+            )}
+            <Input
+              type="text"
+              placeholder="Email address"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+            />
+            <Input
+              type="password"
+              placeholder="Password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+            />
 
-            <Button variant="filled" type="submit">
+            <Button variant="filled" type="submit" loading={loading}>
               Sign in
+            </Button>
+            <Button
+              variant="outlined"
+              type="button"
+              onClick={handleSignInWithGoogle}
+              icon={<FcGoogle size={30} />}
+            >
+              Sign in google
             </Button>
           </form>
         </section>
@@ -49,4 +128,4 @@ const Register: React.FC = () => {
   );
 };
 
-export default Register;
+export default login;

@@ -7,10 +7,9 @@ import { Input } from "../components/Input";
 import { Layout } from "../components/Layout";
 import LogoSvg from "../components/LogoSvg";
 import { useState } from "react";
-import { useEffect } from "react";
-import firebase from "firebase";
+import firebase from "../utils/initFirebase";
 import { Alert } from "../components/Alert";
-import { Router, useRouter } from "next/dist/client/router";
+import { useRouter } from "next/dist/client/router";
 
 const register: React.FC = () => {
   const [email, setEmail] = useState("");
@@ -19,6 +18,22 @@ const register: React.FC = () => {
   const [loading, setLoading] = useState(false);
 
   const router = useRouter();
+
+  const handleGoogleRegister = () => {
+    let provider = new firebase.auth.GoogleAuthProvider();
+    provider.addScope("https://www.googleapis.com/auth/contacts.readonly");
+    firebase
+      .auth()
+      .signInWithPopup(provider)
+      .then((value) => {
+        console.log(value);
+        router.push(`/dash/?email=${value.user?.email}`);
+      })
+      .catch((err) => setError(err));
+
+    //use this when on mobile
+    // firebase.auth().signInWithRedirect(provider);
+  };
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     setLoading(true);
@@ -102,8 +117,10 @@ const register: React.FC = () => {
               <div className="w-full border-b-8"></div>
               <Button
                 variant="outlined"
+                type="button"
                 className="w-11/12 text-lg text-blue-500"
                 icon={<FcGoogle size={30} />}
+                onClick={handleGoogleRegister}
               >
                 Join with google
               </Button>

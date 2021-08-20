@@ -1,7 +1,9 @@
 import React from "react";
 import { Layout } from "../components/Layout";
+import { useIsAuth } from "../hooks/useIsAuthenticated";
 
 const Index = () => {
+  useIsAuth();
   return (
     <>
       <div className="bg-gray-200 flex">
