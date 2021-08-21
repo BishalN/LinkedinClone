@@ -42,7 +42,7 @@ export const Button: React.FC<ButtonProps> = ({
   return (
     <button
       disabled={disabled || loading}
-      className={`${className} flex justify-center outline-none focus:ring-2 focus:ring-blue-500 
+      className={`${className} flex justify-center outline-none focus:ring-1 focus:ring-blue-500 
       ${sizeClassNames[size]} ${
         transition ? `transition duration-200 ease-in-out` : ``
       } ${varaintsClassNames[variant]}  `}

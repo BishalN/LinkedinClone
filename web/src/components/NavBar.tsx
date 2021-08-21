@@ -41,7 +41,7 @@ export const NavBar: React.FC = () => {
         <AvatarWithDropDown />
 
         {/* divider */}
-        <div className="border-l-2"></div>
+        <div className="border-l-2 border-gray-100"></div>
 
         <IconWithText
           text="Work"

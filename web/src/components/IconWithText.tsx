@@ -10,7 +10,7 @@ export const IconWithText: React.FC<IconWithTextProps> = ({ Icon, text }) => {
   return (
     <div className="flex flex-col justify-center items-center">
       <span>{Icon}</span>
-      <span className="text-xs text-center">{title}</span>
+      <span className="text-xs text-center">{text}</span>
     </div>
   );
 };

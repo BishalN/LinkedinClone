@@ -12,7 +12,4 @@ export default {
 const Template: Story = (args) => <NavBar {...args} />;
 
 export const NavBarGeneral = Template.bind({});
-NavBarGeneral.args = {
-  message: "Successfully uploaded",
-  variant: "sucess",
-};
+NavBarGeneral.args = {};
