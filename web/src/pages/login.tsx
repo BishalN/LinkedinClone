@@ -52,16 +52,22 @@ const login: React.FC = () => {
 
     firebase
       .auth()
-      .signInWithEmailAndPassword(email, password)
+      .setPersistence(firebase.auth.Auth.Persistence.LOCAL)
       .then((value) => {
-        console.log(value);
-        router.push(`/dash/?email=${value.user?.email}`);
-        setLoading(false);
-      })
-      .catch((err) => {
-        setError(err);
-        console.log(err);
-        setLoading(false);
+        console.log(value + "Persistence log in is now on");
+        return firebase
+          .auth()
+          .signInWithEmailAndPassword(email, password)
+          .then((value) => {
+            console.log(value);
+            router.push(`/dash/?email=${value.user?.email}`);
+            setLoading(false);
+          })
+          .catch((err) => {
+            setError(err);
+            console.log(err);
+            setLoading(false);
+          });
       });
   };
   return (

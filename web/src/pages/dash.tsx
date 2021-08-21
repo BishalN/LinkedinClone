@@ -1,16 +1,15 @@
 import { useRouter } from "next/dist/client/router";
 import React from "react";
 import { useIsAuth } from "../hooks/useIsAuthenticated";
+import firebase from "../utils/initFirebase";
 
 const dash = () => {
   useIsAuth();
   const router = useRouter();
   const query = router.query;
-  //he
+
   return (
-    <div>
-      <pre>{JSON.stringify(query, null, 2)}</pre>
-    </div>
+    <div>You must be looged in as {firebase.auth().currentUser?.email}</div>
   );
 };
 

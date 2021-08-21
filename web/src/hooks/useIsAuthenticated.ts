@@ -6,12 +6,13 @@ export const useIsAuth = () => {
   const router = useRouter();
 
   useEffect(() => {
-    const user = firebase.auth().currentUser;
-    console.log(user);
-    if (user) {
-      router.replace(`/dash/?email=${user.email}`);
-    } else {
-      router.replace("/login");
-    }
+    firebase.auth().onAuthStateChanged((user) => {
+      if (user) {
+        console.log(user);
+        router.replace(`/dash/?email=${user.email}`);
+      } else {
+        router.replace("/login");
+      }
+    });
   }, []);
 };
