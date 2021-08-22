@@ -1,6 +1,8 @@
 import { useRouter } from "next/dist/client/router";
 import React from "react";
 import { Layout } from "../components/Layout";
+import { LoggedInLayout } from "../components/LoggedInLayout";
+import { NavBar } from "../components/NavBar";
 import { useIsAuth } from "../hooks/useIsAuthenticated";
 import firebase from "../utils/initFirebase";
 
@@ -10,9 +12,9 @@ const dash = () => {
   const query = router.query;
 
   return (
-    <Layout>
-      You must be looged in as {firebase.auth().currentUser?.email}
-    </Layout>
+    <LoggedInLayout>
+      <h1>Hey there</h1>
+    </LoggedInLayout>
   );
 };
 

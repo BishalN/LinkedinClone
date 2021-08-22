@@ -6,7 +6,7 @@ export const Layout: React.FC<HTMLAttributes<HTMLDivElement>> = ({
 }) => {
   return (
     <div
-      className={`container mx-auto sm:px-2 md:px-24 overflow-hidden ${className}`}
+      className={`container mx-auto  sm:px-2 md:px-24 overflow-hidden ${className}`}
     >
       {children}
     </div>

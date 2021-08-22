@@ -9,7 +9,7 @@ import { AvatarWithDropDown } from "./AvatarWithDropdown";
 
 export const NavBar: React.FC = () => {
   return (
-    <nav className="flex items-center justify-between overflow-hidden">
+    <nav className="h-24 bg-white  border-b-2 border-gray-100  sm:px-4 flex items-center justify-between overflow-hidden">
       <SearchBarWithLogo />
 
       <div className="flex space-x-10">

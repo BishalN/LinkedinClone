@@ -13,7 +13,9 @@ export const IconWithText: React.FC<IconWithTextProps> = ({
   className,
 }) => {
   return (
-    <div className={`${className} flex flex-col justify-center items-center`}>
+    <div
+      className={`${className} cursor-pointer flex flex-col justify-center items-center`}
+    >
       <span>{Icon}</span>
       <span className="hidden md:inline-block text-xs text-center">{text}</span>
     </div>
