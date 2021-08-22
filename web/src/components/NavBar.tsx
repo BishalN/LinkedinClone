@@ -9,16 +9,20 @@ import { AvatarWithDropDown } from "./AvatarWithDropdown";
 
 export const NavBar: React.FC = () => {
   return (
-    <nav className="h-24 bg-white  border-b-2 border-gray-100  sm:px-4 flex items-center justify-between overflow-hidden">
+    <nav className="bg-white mt-1 border-gray-200 border-b-2  sm:px-4 flex items-center justify-between overflow-hidden lg:px-16">
       <SearchBarWithLogo />
 
       <div className="flex space-x-10">
-        <AvatarWithDropDown />
         <IconWithText
           text="Home"
           Icon={<FaHome size={25} color="#374151" title="Home" />}
         />
+        <AvatarWithDropDown />
 
+        <IconWithText
+          text="Notifications"
+          Icon={<IoMdNotifications size={25} color="#374151" />}
+        />
         <IconWithText
           text="My Network"
           Icon={<FaNetworkWired size={25} color="#374151" />}
@@ -34,11 +38,6 @@ export const NavBar: React.FC = () => {
           text="Messaging"
           className="hidden sm:flex"
           Icon={<BiMessageRoundedDetail size={25} color="#374151" />}
-        />
-
-        <IconWithText
-          text="Notifications"
-          Icon={<IoMdNotifications size={25} color="#374151" />}
         />
 
         {/* divider */}
