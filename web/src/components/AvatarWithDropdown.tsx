@@ -9,13 +9,12 @@ export const AvatarWithDropDown = () => {
   return (
     <Popover
       isOpen={isPopoverOpen}
-      positions={["bottom", "left"]} // if you'd like, you can limit the positions
-      padding={10} // adjust padding here!
-      reposition={false} // prevents automatic readjustment of content position that keeps your popover content within its parent's bounds
-      onClickOutside={() => setIsPopoverOpen(false)} // handle click events outside of the popover/target here!
-      content={(
-        { position, nudgedLeft, nudgedTop } // you can also provide a render function that injects some useful stuff!
-      ) => (
+      positions={["bottom", "left", "right", "top"]}
+      reposition={false}
+      padding={10}
+      css="mr-20"
+      onClickOutside={() => setIsPopoverOpen(false)}
+      content={() => (
         <div className="bg-white rounded-md border-2 drop-shadow-sm">
           <div className="flex justify-center items-center space-x-2 px-2 py-2">
             <img
@@ -68,7 +67,7 @@ export const AvatarWithDropDown = () => {
           className="rounded-full h-10 w-10"
         />
 
-        <div className="flex text-xs space-x-1 justify-center">
+        <div className="hidden lg:flex  text-xs space-x-1 justify-center">
           <span>Me</span>
           <FiChevronDown size={20} />
         </div>
