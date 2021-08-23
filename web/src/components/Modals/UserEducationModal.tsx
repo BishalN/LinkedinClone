@@ -6,6 +6,8 @@ import { UserInputWithLabel } from "./UserInputWithLabel";
 import { Button } from "../Button";
 import { UserInputTextareaWithLabel } from "./UserInputTextareaWithLabel";
 import { IconWithHover } from "./IconWithHover";
+import { MonthSelector, YearSelector } from "./Selectors";
+import { AiOutlineClose } from "react-icons/ai";
 
 type UserEducationModalProps = { isEditing?: boolean };
 
@@ -20,6 +22,8 @@ export const UserEducationModal: React.FC<UserEducationModalProps> = ({
       bottom: "auto",
       marginRight: "-50%",
       transform: "translate(-50%, -50%)",
+      height: "90vh",
+      width: "50vw",
     },
   };
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -57,54 +61,77 @@ export const UserEducationModal: React.FC<UserEducationModalProps> = ({
         overlayClassName="Overlay"
         contentLabel="Edit Intro"
       >
-        <div>
-          <p className="text-xl font-medium text-gray-600 mb-3">Edit intro</p>
-          <div className="border-b-2 border-gray-100" />
+        <div className="flex justify-between">
+          <p className="text-xl font-medium text-gray-600 mb-3">
+            {isEditing ? "Edit education" : "Add education"}
+          </p>
+          <IconWithHover
+            Icon={
+              <AiOutlineClose
+                size={25}
+                color="#4B5563"
+                onClick={() => setIsModalOpen(false)}
+              />
+            }
+          />
         </div>
+        <div className="border-b-2 border-gray-100" />
         <form className="space-y-5 mt-5">
-          <div className="flex space-x-10">
-            <UserInputWithLabel
-              label="First Name"
-              placeholder="First Name"
-              id="firstName"
-            />
-            <UserInputWithLabel
-              label="Last Name"
-              placeholder="Last Name"
-              id="firstName"
-            />
+          <UserInputWithLabel
+            label="School"
+            placeholder="Ex. Boston University"
+            id="school"
+            className="w-full"
+          />
+          <UserInputWithLabel
+            label="Degree"
+            placeholder="E.x Bachelors"
+            id="degree"
+            className="w-full"
+          />
+
+          <UserInputWithLabel
+            label="Field of study"
+            id="field"
+            placeholder="Ex. Business"
+            className="w-full"
+          />
+
+          <div>
+            <span className="text-gray-600">Start Date</span>
+            <div className="flex space-x-7 ">
+              <MonthSelector className="w-1/2" />
+              <YearSelector className="w-1/2" />
+            </div>
           </div>
 
-          <UserInputTextareaWithLabel
-            label="Head Line"
-            id="headLine"
-            placeholder="Head Line"
+          <div>
+            <span className="text-gray-600">End Date</span>
+            <div className="flex space-x-7 ">
+              <MonthSelector className="w-1/2" />
+              <YearSelector className="w-1/2" />
+            </div>
+          </div>
+
+          <UserInputWithLabel
+            label="Grade"
+            placeholder=""
+            id="grade"
             className="w-full"
           />
 
-          <UserInputWithLabel
-            label="Current Position"
-            placeholder="Current Position"
-            id="currentPosition"
+          <UserInputTextareaWithLabel
+            label="Activities and Society"
+            id="activities"
+            placeholder="Ex. Volleyball"
             className="w-full"
           />
-          <UserInputWithLabel
-            label="Education"
+
+          <UserInputTextareaWithLabel
+            label="Description"
+            id="desc"
+            placeholder="Describe"
             className="w-full"
-            id="education"
-            placeholder="Education"
-          />
-          <UserInputWithLabel
-            label="Country Region"
-            className="w-full"
-            id="countryRegion"
-            placeholder="Country Region"
-          />
-          <UserInputWithLabel
-            label="Locations in this Country/Region"
-            className="w-full"
-            id="location"
-            placeholder="Location"
           />
 
           <div className="flex justify-end">

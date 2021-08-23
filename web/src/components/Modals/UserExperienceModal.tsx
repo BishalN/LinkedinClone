@@ -4,8 +4,10 @@ import { FiEdit2 } from "react-icons/fi";
 import { GrAdd } from "react-icons/gr";
 import { UserInputWithLabel } from "./UserInputWithLabel";
 import { Button } from "../Button";
-import { UserInputTextareaWithLabel } from "./UserInputTextareaWithLabel";
 import { IconWithHover } from "./IconWithHover";
+import { UserInputTextareaWithLabel } from "./UserInputTextareaWithLabel";
+import { EmploymentSelector, MonthSelector, YearSelector } from "./Selectors";
+import { AiOutlineClose } from "react-icons/ai";
 
 type UserExperienceModalProps = { isEditing?: boolean };
 
@@ -20,6 +22,8 @@ export const UserExperienceModal: React.FC<UserExperienceModalProps> = ({
       bottom: "auto",
       marginRight: "-50%",
       transform: "translate(-50%, -50%)",
+      height: "90vh",
+      width: "50vw",
     },
   };
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -57,56 +61,91 @@ export const UserExperienceModal: React.FC<UserExperienceModalProps> = ({
         overlayClassName="Overlay"
         contentLabel="Edit Intro"
       >
-        <div>
-          <p className="text-xl font-medium text-gray-600 mb-3">Edit intro</p>
-          <div className="border-b-2 border-gray-100" />
+        <div className="flex justify-between">
+          <p className="text-xl font-medium text-gray-600 mb-3">
+            {isEditing ? "Edit experience" : "Add experience"}
+          </p>
+          <IconWithHover
+            Icon={
+              <AiOutlineClose
+                size={25}
+                color="#4B5563"
+                onClick={() => setIsModalOpen(false)}
+              />
+            }
+          />
         </div>
+        <div className="border-b-2 border-gray-100" />
         <form className="space-y-5 mt-5">
-          <div className="flex space-x-10">
-            <UserInputWithLabel
-              label="First Name"
-              placeholder="First Name"
-              id="firstName"
-            />
-            <UserInputWithLabel
-              label="Last Name"
-              placeholder="Last Name"
-              id="firstName"
-            />
+          <UserInputWithLabel
+            label="Title"
+            placeholder="Ex. Product Manager"
+            id="title"
+            className="w-full"
+          />
+
+          <div>
+            <span className="text-gray-500">Employment Type</span>
+            <EmploymentSelector className="w-full" />
           </div>
 
-          <UserInputTextareaWithLabel
-            label="Head Line"
-            id="headLine"
-            placeholder="Head Line"
-            className="w-full"
-          />
-
           <UserInputWithLabel
-            label="Current Position"
-            placeholder="Current Position"
-            id="currentPosition"
+            label="Company Name"
+            id="companyName"
+            placeholder="Ex. Microsoft"
             className="w-full"
           />
           <UserInputWithLabel
-            label="Education"
-            className="w-full"
-            id="education"
-            placeholder="Education"
-          />
-          <UserInputWithLabel
-            label="Country Region"
-            className="w-full"
-            id="countryRegion"
-            placeholder="Country Region"
-          />
-          <UserInputWithLabel
-            label="Locations in this Country/Region"
-            className="w-full"
+            label="Location"
+            placeholder="Ex. London United Kingdom"
             id="location"
-            placeholder="Location"
+            className="w-full"
           />
+          <div className="flex items-center space-x-3">
+            <input
+              type="checkbox"
+              id="workStatus"
+              className="rounded text-blue-500 h-6 w-6 checked:outline-none"
+            />
+            <label htmlFor="workStatus">
+              I'm currently working in this role
+            </label>
+          </div>
 
+          <div>
+            <span className="text-gray-600">Start Date</span>
+            <div className="flex space-x-7 ">
+              <MonthSelector className="w-1/2" />
+              <YearSelector className="w-1/2" />
+            </div>
+          </div>
+
+          <div>
+            <span className="text-gray-600">End Date</span>
+            <div className="flex space-x-7 ">
+              <MonthSelector className="w-1/2" />
+              <YearSelector className="w-1/2" />
+            </div>
+          </div>
+
+          <UserInputWithLabel
+            label="Head Line"
+            placeholder="E.x Software architect"
+            id="headLine"
+            className="w-full"
+          />
+          <UserInputWithLabel
+            label="Industry"
+            placeholder="E.g Software development"
+            id="Industry"
+            className="w-full"
+          />
+          <UserInputTextareaWithLabel
+            label="Description"
+            id="description"
+            placeholder="Desribe your role"
+            className="w-full"
+          />
           <div className="flex justify-end">
             <Button variant="filled" type="button" className="">
               Save

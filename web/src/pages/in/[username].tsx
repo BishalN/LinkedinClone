@@ -8,6 +8,7 @@ import { UserInfoModal } from "../../components/Modals/UserInfoModal";
 import { UserAboutModal } from "../../components/Modals/UserAboutModal";
 import { UserExperienceModal } from "../../components/Modals/UserExperienceModal";
 import { UserEducationModal } from "../../components/Modals/UserEducationModal";
+import { UserPhotoModal } from "../../components/Modals/UserPhotoModal";
 
 const Profile = () => {
   const imageUrl = firebase.auth().currentUser?.photoURL;
@@ -17,11 +18,7 @@ const Profile = () => {
       <section className="border-2  mt-5  border-gray-300  drop-shadow-xl pb-2 rounded-lg">
         <div className="bg-gradient-to-r from-yellow-400 via-red-500 to-pink-500 h-32 "></div>
         <div className="px-5 flex justify-center flex-col space-y-4">
-          <img
-            src={imageUrl || ""}
-            alt="Username"
-            className="rounded-full h-36 w-36 -mt-20 ring-4 ring-white"
-          />
+          <UserPhotoModal />
           <div className="flex justify-between">
             <div>
               {/* name */}

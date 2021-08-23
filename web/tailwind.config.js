@@ -7,7 +7,9 @@ module.exports = {
   variants: {
     extend: {
       width: ["hover", "focus"],
+      backgroundColor: ["checked"],
+      borderColor: ["checked"],
     },
   },
-  plugins: [],
+  plugins: [require("@tailwindcss/forms")],
 };
