@@ -1,152 +1,18 @@
 import React from "react";
-import Modal from "react-modal";
 
 import { LoggedInLayout } from "../../components/LoggedInLayout";
 import firebase from "../../utils/initFirebase";
-import { FiEdit2 } from "react-icons/fi";
-import { GrAdd } from "react-icons/gr";
 import { SiUpwork } from "react-icons/si";
 import { MdSchool } from "react-icons/md";
-import { useState } from "react";
-import { Input } from "../../components/Input";
-import { Button } from "../../components/Button";
-
-const InputWithLabel = ({ label }) => {
-  return (
-    <div className="flex flex-col">
-      <label htmlFor="firstName" className="text-gray-500">
-        First Name
-      </label>
-      <input
-        type="text"
-        id="firstName"
-        placeholder="First Name"
-        className="border-2 p-1 w-96 border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-600 rounded-sm"
-      />
-    </div>
-  );
-};
-
-const MyModal = () => {
-  const customStyles = {
-    content: {
-      top: "50%",
-      left: "50%",
-      right: "auto",
-      bottom: "auto",
-      marginRight: "-50%",
-      transform: "translate(-50%, -50%)",
-    },
-  };
-  const [isModalOpen, setIsModalOpen] = useState(false);
-
-  return (
-    <div>
-      <button onClick={() => setIsModalOpen(true)}>Open Modal</button>
-      <Modal
-        isOpen={isModalOpen}
-        onRequestClose={() => setIsModalOpen(false)}
-        style={customStyles}
-        overlayClassName="Overlay"
-        contentLabel="Edit Intro"
-      >
-        <div>
-          <p className="text-xl font-medium text-gray-600 mb-3">Edit intro</p>
-          <div className="border-b-2 border-gray-100" />
-        </div>
-        <form className="space-y-5 mt-5">
-          <div className="flex space-x-10">
-            <div className="flex flex-col">
-              <label htmlFor="firstName" className="text-gray-500">
-                First Name
-              </label>
-              <input
-                type="text"
-                id="firstName"
-                placeholder="First Name"
-                className="border-2 p-1 w-96 border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-600 rounded-sm"
-              />
-            </div>
-            <div className="flex flex-col">
-              <label htmlFor="lastName" className="text-gray-500">
-                Last Name
-              </label>
-              <input
-                type="text"
-                id="lastName"
-                placeholder="Last Name"
-                className="border-2 p-1 w-96 border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-600 rounded-sm"
-              />
-            </div>
-          </div>
-          <div className="flex flex-col">
-            <label htmlFor="headLine" className="text-gray-500">
-              Head Line
-            </label>
-            <textarea
-              id="headLine"
-              placeholder="Head Line"
-              className="border-2 p-1 border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-600 rounded-sm"
-            />
-          </div>
-          <div className="flex flex-col">
-            <label htmlFor="currentPosition" className="text-gray-500">
-              Current Postion
-            </label>
-            <input
-              type="text"
-              id="currentPosition"
-              placeholder="Current Postion"
-              className="border-2 p-1 border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-600 rounded-sm"
-            />
-          </div>
-          <div className="flex flex-col">
-            <label htmlFor="education" className="text-gray-500">
-              Education
-            </label>
-            <input
-              type="text"
-              id="education"
-              placeholder="Education"
-              className="border-2 p-1 border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-600 rounded-sm"
-            />
-          </div>
-          <div className="flex flex-col">
-            <label htmlFor="country" className="text-gray-500">
-              Country Region
-            </label>
-            <input
-              type="text"
-              id="country"
-              placeholder="Country"
-              className="border-2 p-1 border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-600 rounded-sm"
-            />
-          </div>
-          <div className="flex flex-col">
-            <label htmlFor="location" className="text-gray-500">
-              Locations in this Country/Region
-            </label>
-            <input
-              type="text"
-              id="location"
-              placeholder="Location"
-              className="border-2 p-1 border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-600 rounded-sm"
-            />
-          </div>
-          <Button variant="filled" type="button">
-            Save
-          </Button>
-        </form>
-      </Modal>
-    </div>
-  );
-};
+import { UserInfoModal } from "../../components/Modals/UserInfoModal";
+import { UserAboutModal } from "../../components/Modals/UserAboutModal";
+import { UserExperienceModal } from "../../components/Modals/UserExperienceModal";
+import { UserEducationModal } from "../../components/Modals/UserEducationModal";
 
 const Profile = () => {
   const imageUrl = firebase.auth().currentUser?.photoURL;
   return (
     <LoggedInLayout>
-      <MyModal />
       {/* profile section */}
       <section className="border-2  mt-5  border-gray-300  drop-shadow-xl pb-2 rounded-lg">
         <div className="bg-gradient-to-r from-yellow-400 via-red-500 to-pink-500 h-32 "></div>
@@ -193,7 +59,7 @@ const Profile = () => {
               </div>
             </div>
 
-            <FiEdit2 size={25} color="#4B5563" />
+            <UserInfoModal />
           </div>
         </div>
       </section>
@@ -202,7 +68,7 @@ const Profile = () => {
       <section className="border-2 my-10 rounded-xl bg-white  border-gray-300 drop-shadow-xl py-6 px-5  space-y-5">
         <div className="flex justify-between">
           <h1 className="text-xl font-medium text-gray-500">About</h1>
-          <FiEdit2 size={25} color="#4B5563" />
+          <UserAboutModal />
         </div>
         <p>
           Web & App developer. ML & DL learner. Great interest in acquiring and
@@ -253,23 +119,21 @@ const Profile = () => {
       <section className="border-2 my-10 rounded-xl bg-white border-gray-300 drop-shadow-xl py-8 px-5 space-y-5">
         <div className="flex justify-between">
           <h1 className="text-xl font-medium text-gray-500">Experience</h1>
-          <div className="rounded-full h-8 w-8 flex items-center justify-center hover:bg-gray-200">
-            <GrAdd size={20} color="#4B5563" />
-          </div>
+
+          <UserExperienceModal />
         </div>
 
         {/* experience details */}
         <div className="flex space-x-5">
-          {/* company image */}
-          {/* <img src="" alt="" /> */}
           <SiUpwork size={40} color="green" />
-          <div>
-            {/* title */}
-            <h3 className="text-xl text-gray-700 font-semibold">
-              Freelance Web developer
-            </h3>
-            {/* description */}
-            <p className="text-base text-gray-500">Upwork part time</p>
+          <div className="w-full flex justify-between">
+            <div>
+              <h3 className="text-xl text-gray-700 font-semibold">
+                Freelance Web developer
+              </h3>
+              <p className="text-base text-gray-500">Upwork part time</p>
+            </div>
+            <UserExperienceModal isEditing={true} />
           </div>
         </div>
 
@@ -278,28 +142,22 @@ const Profile = () => {
         {/* education */}
         <div className="mt-5 flex justify-between">
           <h1 className="text-xl font-medium text-gray-500">Education</h1>
-          <div className="rounded-full h-8 w-8 flex items-center justify-center hover:bg-gray-200">
-            <GrAdd size={20} color="#4B5563" />
-          </div>
+          <UserEducationModal />
         </div>
 
-        {/* education details */}
         <div className="flex space-x-5">
-          {/* company image */}
-          {/* <img src="" alt="" /> */}
           <MdSchool size={40} color="green" />
-          <div>
-            {/* title */}
-            <div className="flex justify-between">
+
+          <div className="w-full flex justify-between">
+            <div>
               <h3 className="text-xl text-gray-700 font-semibold">
                 Kalika Manavgyan
               </h3>
-              <FiEdit2 size={25} color="#4B5563" />
+              <p className="text-base text-gray-500">
+                High School Diploma, Computer Engineering
+              </p>
             </div>
-            {/* description */}
-            <p className="text-base text-gray-500">
-              High school diploma, computer engineering
-            </p>
+            <UserEducationModal isEditing={true} />
           </div>
         </div>
       </section>
