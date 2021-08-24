@@ -20,7 +20,7 @@ export const UserInputTextareaWithLabel: React.FC<UserInputTextareaWithLabelProp
       <textarea
         id={id}
         placeholder={placeholder}
-        className={`${className} border-2 p-1 w-96 border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-600 rounded-sm`}
+        className={`${className} w-96  rounded-sm`}
         {...props}
       />
     </div>

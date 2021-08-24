@@ -1,9 +1,8 @@
 import React, { useState } from "react";
 import Modal from "react-modal";
-import { FiEdit2 } from "react-icons/fi";
-import { IconWithHover } from "./IconWithHover";
 import { AiOutlineClose } from "react-icons/ai";
 import { MdAddAPhoto } from "react-icons/md";
+import { IconWithHover } from "./IconWithHover";
 
 export const UserPhotoModal = () => {
   const customStyles = {
@@ -59,9 +58,84 @@ export const UserPhotoModal = () => {
           />
         </div>
 
-        <div className="flex flex-col items-center cursor-pointer">
-          <MdAddAPhoto size={25} color="white" />
-          <span className="text-gray-400 ">Add Photo</span>
+        <UserPhotoUploadModal />
+      </Modal>
+    </>
+  );
+};
+
+const UserPhotoUploadModal = () => {
+  const customStyles = {
+    content: {
+      top: "50%",
+      left: "50%",
+      right: "auto",
+      bottom: "auto",
+      marginRight: "-50%",
+      transform: "translate(-50%, -50%)",
+      width: "50vw",
+      border: "none",
+      height: "70vh",
+      overflow: "hidden",
+    },
+  };
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  return (
+    <>
+      <div
+        className="flex flex-col items-center cursor-pointer"
+        onClick={() => setIsModalOpen(true)}
+      >
+        <MdAddAPhoto size={25} color="white" />
+        <span className="text-gray-400 ">Add Photo</span>
+      </div>
+
+      <Modal
+        isOpen={isModalOpen}
+        onRequestClose={() => setIsModalOpen(false)}
+        style={customStyles}
+        overlayClassName="Overlay"
+        contentLabel="Edit Intro"
+      >
+        <div className="flex justify-between">
+          <p className="text-xl font-medium mb-3 text-gray-500">Change Photo</p>
+          <IconWithHover
+            Icon={
+              <AiOutlineClose
+                size={25}
+                color="#9CA3AF"
+                className="cursor-pointer"
+                onClick={() => setIsModalOpen(false)}
+              />
+            }
+          />
+        </div>
+        <div className="border-b-2 border-gray-50"></div>
+
+        <div className="flex space-y-10 flex-col justify-center items-center">
+          <h3 className="text-2xl mt-5">Bishal Keep your profile fresh</h3>
+          <img
+            src="https://lh3.googleusercontent.com/a-/AOh14GgkyzMhg3ICB-Fy1_DLGWYSKiXRicilSoaXqJz7Eg=s96-c"
+            alt="Username"
+            className="rounded-full h-32 w-32"
+          />
+        </div>
+
+        <div className="flex flex-col items-center mt-10">
+          <label
+            htmlFor="fileUpload"
+            className="border-2 rounded-full text-center border-blue-500 w-40 p-2 hover:bg-gray-200"
+          >
+            Upload photo
+          </label>
+          <input
+            type="file"
+            name=""
+            id="fileUpload"
+            className="appearance-none invisible"
+            placeholder="Upload photo"
+          />
         </div>
       </Modal>
     </>
