@@ -10,7 +10,11 @@ import { UserInputTextareaWithLabel } from "./UserInputTextareaWithLabel";
 import { IconWithHover } from "./IconWithHover";
 import { MonthSelector, YearSelector } from "./Selectors";
 import { AiOutlineClose } from "react-icons/ai";
-import { handleUserInfoValidation } from "./handleUserInfoValidation";
+import {
+  handleUserEducationValidation,
+  UserEducationValue,
+} from "./handleUserEducationValidation";
+import firebase from "../../utils/initFirebase";
 
 type UserEducationModalProps = { isEditing?: boolean };
 
@@ -30,6 +34,46 @@ export const UserEducationModal: React.FC<UserEducationModalProps> = ({
     },
   };
   const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const handleSubmit = async (
+    {
+      endYear,
+      activitiesAndSociety,
+      degree,
+      description,
+      endMonth,
+      fieldOfStudy,
+      grade,
+      school,
+      startMonth,
+      startYear,
+    }: UserEducationValue,
+    setSubmitting: (isSubmitting: boolean) => void
+  ) => {
+    const uid = firebase.auth().currentUser?.uid;
+    const userEducationRef = firebase
+      .firestore()
+      .collection("users")
+      .doc(uid)
+      .collection("userEducations")
+      .doc(uid);
+
+    await userEducationRef.set(
+      {
+        degree,
+        description,
+        grade,
+        school,
+        fieldOfStudy,
+        activitiesAndSociety,
+        startDate: `${startMonth}, ${startYear}`,
+        endDate: `${endMonth}, ${endYear}`,
+      },
+      { merge: true }
+    );
+
+    setSubmitting(false);
+  };
 
   return (
     <div>
@@ -81,19 +125,19 @@ export const UserEducationModal: React.FC<UserEducationModalProps> = ({
         <div className="border-b-2 border-gray-100" />
         <Formik
           initialValues={{
-            title: "",
-            employmentType: "",
-            companyName: "",
-            location: "",
-            isStillOnRole: false,
-            startDate: "",
-            endDate: "",
-            headLine: "",
-            Industry: "",
+            school: "",
+            degree: "",
+            fieldOfStudy: "",
+            startMonth: "",
+            startYear: "",
+            endMonth: "",
+            endYear: "",
+            grade: "",
+            activitiesAndSociety: "",
             description: "",
           }}
           validate={(values) => {
-            const err = handleUserInfoValidation(values);
+            const err = handleUserEducationValidation(values);
             return err;
           }}
           onSubmit={(values, { setSubmitting }) => {
@@ -112,11 +156,21 @@ export const UserEducationModal: React.FC<UserEducationModalProps> = ({
             <form className="space-y-5 mt-5" onSubmit={handleSubmit}>
               <UserInputWithLabel
                 label="School"
+                name="school"
+                value={values.school}
+                onChange={handleChange}
+                onBlur={handleBlur}
+                error={errors.school}
                 placeholder="Ex. Boston University"
                 id="school"
                 className="w-full"
               />
               <UserInputWithLabel
+                name="degree"
+                value={values.degree}
+                onChange={handleChange}
+                onBlur={handleBlur}
+                error={errors.degree}
                 label="Degree"
                 placeholder="E.x Bachelors"
                 id="degree"
@@ -125,6 +179,11 @@ export const UserEducationModal: React.FC<UserEducationModalProps> = ({
 
               <UserInputWithLabel
                 label="Field of study"
+                name="fieldOfStudy"
+                value={values.fieldOfStudy}
+                onChange={handleChange}
+                onBlur={handleBlur}
+                error={errors.fieldOfStudy}
                 id="field"
                 placeholder="Ex. Business"
                 className="w-full"
@@ -132,17 +191,42 @@ export const UserEducationModal: React.FC<UserEducationModalProps> = ({
 
               <div>
                 <span className="text-gray-600">Start Date</span>
+                {errors.startMonth && (
+                  <span className="text-red-500 text-sm block">
+                    {errors.startMonth}
+                  </span>
+                )}
                 <div className="flex space-x-7 ">
-                  <MonthSelector className="w-1/2" />
-                  <YearSelector className="w-1/2" />
+                  <MonthSelector
+                    className="w-1/2"
+                    name="startMonth"
+                    value={values.startMonth}
+                    onChange={handleChange}
+                  />
+                  <YearSelector
+                    className="w-1/2"
+                    name="startYear"
+                    value={values.startYear}
+                    onChange={handleChange}
+                  />
                 </div>
               </div>
 
               <div>
                 <span className="text-gray-600">End Date</span>
                 <div className="flex space-x-7 ">
-                  <MonthSelector className="w-1/2" />
-                  <YearSelector className="w-1/2" />
+                  <MonthSelector
+                    className="w-1/2"
+                    name="endMonth"
+                    value={values.endMonth}
+                    onChange={handleChange}
+                  />
+                  <YearSelector
+                    className="w-1/2"
+                    name="endYear"
+                    value={values.endYear}
+                    onChange={handleChange}
+                  />
                 </div>
               </div>
 
@@ -150,6 +234,11 @@ export const UserEducationModal: React.FC<UserEducationModalProps> = ({
                 label="Grade"
                 placeholder=""
                 id="grade"
+                name="grade"
+                value={values.grade}
+                onChange={handleChange}
+                onBlur={handleBlur}
+                error={errors.grade}
                 className="w-full"
               />
 
@@ -158,17 +247,27 @@ export const UserEducationModal: React.FC<UserEducationModalProps> = ({
                 id="activities"
                 placeholder="Ex. Volleyball"
                 className="w-full"
+                name="activitiesAndSociety"
+                value={values.activitiesAndSociety}
+                onChange={handleChange}
+                onBlur={handleBlur}
+                error={errors.activitiesAndSociety}
               />
 
               <UserInputTextareaWithLabel
                 label="Description"
+                name="description"
+                value={values.description}
+                onChange={handleChange}
+                onBlur={handleBlur}
+                error={errors.description}
                 id="desc"
                 placeholder="Describe"
                 className="w-full"
               />
 
               <div className="flex justify-end">
-                <Button variant="filled" type="submit" className="">
+                <Button variant="filled" type="submit" loading={isSubmitting}>
                   Save
                 </Button>
               </div>

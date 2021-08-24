@@ -74,7 +74,7 @@ export const handleUserExperienceValidation = ({
   return error;
 };
 
-function getMonthFromString(mon: string) {
+export function getMonthFromString(mon: string) {
   let d = Date.parse(mon + "1, 2012");
   if (!isNaN(d)) {
     return new Date(d).getMonth() + 1;
