@@ -3,6 +3,8 @@ import Modal from "react-modal";
 import { AiOutlineClose } from "react-icons/ai";
 import { MdAddAPhoto } from "react-icons/md";
 import { IconWithHover } from "./IconWithHover";
+import { Button } from "../Button";
+import firebase from "../../utils/initFirebase";
 
 export const UserPhotoModal = () => {
   const customStyles = {
@@ -80,6 +82,22 @@ const UserPhotoUploadModal = () => {
     },
   };
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [imageUrl, setImageUrl] = useState("");
+  const [imgFile, setImgFile] = useState<File>();
+
+  const handleUpload = async () => {
+    const uid = firebase.auth().currentUser?.uid;
+    //points to the root of the storage bucket
+    const storageRef = firebase.storage().ref();
+    const imageRef = storageRef.child("images");
+
+    const profileRef = imageRef.child(imgFile?.name!);
+
+    const res = await profileRef.put(imgFile!);
+
+    //update the user ref on the firestore database to point the newly uploaded profile picture
+    console.log(res);
+  };
 
   return (
     <>
@@ -116,22 +134,36 @@ const UserPhotoUploadModal = () => {
         <div className="flex space-y-10 flex-col justify-center items-center">
           <h3 className="text-2xl mt-5">Bishal Keep your profile fresh</h3>
           <img
-            src="https://lh3.googleusercontent.com/a-/AOh14GgkyzMhg3ICB-Fy1_DLGWYSKiXRicilSoaXqJz7Eg=s96-c"
+            src={
+              imageUrl ||
+              "https://lh3.googleusercontent.com/a-/AOh14GgkyzMhg3ICB-Fy1_DLGWYSKiXRicilSoaXqJz7Eg=s96-c"
+            }
             alt="Username"
             className="rounded-full h-32 w-32"
           />
         </div>
 
         <div className="flex flex-col items-center mt-10">
-          <label
-            htmlFor="fileUpload"
-            className="border-2 rounded-full text-center border-blue-500 w-40 p-2 hover:bg-gray-200"
-          >
-            Upload photo
-          </label>
+          {imageUrl ? (
+            <Button variant="filled" onClick={() => handleUpload()}>
+              Save the photo
+            </Button>
+          ) : (
+            <label
+              htmlFor="fileUpload"
+              className="border-2 rounded-full text-center border-blue-500 w-40 p-2 hover:bg-gray-200"
+            >
+              {imageUrl ? "Save Changes" : "Upload photo"}
+            </label>
+          )}
+
           <input
             type="file"
-            name=""
+            onChange={(e) => {
+              const url = URL.createObjectURL(e.target.files![0]);
+              setImageUrl(url);
+              setImgFile(e.target.files![0]);
+            }}
             id="fileUpload"
             className="appearance-none invisible"
             placeholder="Upload photo"
