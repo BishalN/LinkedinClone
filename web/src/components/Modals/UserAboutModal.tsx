@@ -5,6 +5,7 @@ import { Button } from "../Button";
 import { UserInputTextareaWithLabel } from "./UserInputTextareaWithLabel";
 import { IconWithHover } from "./IconWithHover";
 import { AiOutlineClose } from "react-icons/ai";
+import firebase from "../../utils/initFirebase";
 
 export const UserAboutModal = () => {
   const customStyles = {
@@ -19,6 +20,26 @@ export const UserAboutModal = () => {
     },
   };
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [summary, setSummary] = useState("");
+  const [error, setError] = useState("");
+  const [isLoading, setIsloading] = useState(false);
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    if (summary.length === 0)
+      return setError("Please write something about yourself");
+
+    setError("");
+    setIsloading(true);
+
+    const uid = firebase.auth().currentUser?.uid;
+
+    const ref = firebase.firestore().collection("users").doc(uid);
+
+    await ref.set({ about: summary }, { merge: true });
+
+    setIsloading(false);
+  };
 
   return (
     <div>
@@ -53,7 +74,7 @@ export const UserAboutModal = () => {
           />
         </div>
         <div className="border-b-2 border-gray-100" />
-        <form className="space-y-5 mt-5">
+        <form className="space-y-5 mt-5" onSubmit={handleSubmit}>
           <div className="flex space-x-10"></div>
 
           <UserInputTextareaWithLabel
@@ -61,10 +82,13 @@ export const UserAboutModal = () => {
             id="summary"
             placeholder="Summary"
             className="w-full"
+            onChange={(e) => setSummary(e.target.value)}
+            error={error}
+            value={summary}
           />
 
           <div className="flex justify-end">
-            <Button variant="filled" type="button" className="">
+            <Button variant="filled" type="submit" loading={isLoading}>
               Save
             </Button>
           </div>

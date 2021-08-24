@@ -3,13 +3,14 @@ import React, { DetailedHTMLProps, TextareaHTMLAttributes } from "react";
 type UserInputTextareaWithLabelProps = DetailedHTMLProps<
   TextareaHTMLAttributes<HTMLTextAreaElement>,
   HTMLTextAreaElement
-> & { label: string; id: string };
+> & { label: string; id: string; error?: string };
 
 export const UserInputTextareaWithLabel: React.FC<UserInputTextareaWithLabelProps> = ({
   label,
   placeholder,
   id,
   className,
+  error,
   ...props
 }) => {
   return (
@@ -23,6 +24,7 @@ export const UserInputTextareaWithLabel: React.FC<UserInputTextareaWithLabelProp
         className={`${className} w-96  rounded-sm`}
         {...props}
       />
+      {error && <span className="text-red-500 text-sm">{error}</span>}
     </div>
   );
 };

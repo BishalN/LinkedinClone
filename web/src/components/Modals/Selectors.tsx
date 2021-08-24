@@ -3,9 +3,9 @@ import React, { DetailedHTMLProps, SelectHTMLAttributes } from "react";
 type SelectorProps = DetailedHTMLProps<
   SelectHTMLAttributes<HTMLSelectElement>,
   HTMLSelectElement
->;
+> & { error?: string };
 
-export const MonthSelector: React.FC<SelectorProps> = (props) => {
+export const MonthSelector: React.FC<SelectorProps> = ({ error, ...props }) => {
   return (
     <select placeholder="Month" {...props}>
       <option value="month">Month</option>
@@ -146,6 +146,19 @@ export const EmploymentSelector: React.FC<SelectorProps> = (props) => {
       <option value="Internship">Internship</option>
       <option value="Apprenticeship">Apprenticeship</option>
       <option value="Seasonal">Seasonal</option>
+    </select>
+  );
+};
+
+export const IndustrySelector: React.FC<SelectorProps> = (props) => {
+  return (
+    <select name="industry" {...props}>
+      <option value="">Choose an industry…</option>
+      <option value="Computer Games">Computer Games</option>
+      <option value="Computer Hardware">Computer Hardware</option>
+      <option value="Computer Networking">Computer Networking</option>
+      <option value="Computer Networking">Computer Networking</option>
+      <option value="others">others</option>
     </select>
   );
 };

@@ -10,6 +10,7 @@ import { Layout } from "../components/Layout";
 import LogoSvg from "../components/LogoSvg";
 import { useIsAuth } from "../hooks/useIsAuthenticated";
 import firebase from "../utils/initFirebase";
+import { userPostRegisterActions } from "../utils/userPostRegister";
 
 const login: React.FC = () => {
   // if already authenticated push to the dash
@@ -29,8 +30,11 @@ const login: React.FC = () => {
     firebase
       .auth()
       .signInWithPopup(provider)
-      .then((value) => {
-        console.log(value);
+      .then(async (value) => {
+        const isNewUser = value.additionalUserInfo?.isNewUser;
+        if (isNewUser) {
+          await userPostRegisterActions(value);
+        }
         router.push(`/dash/?email=${value.user?.email}`);
       })
       .catch((err) => setError(err));
@@ -54,18 +58,15 @@ const login: React.FC = () => {
       .auth()
       .setPersistence(firebase.auth.Auth.Persistence.LOCAL)
       .then((value) => {
-        console.log(value + "Persistence log in is now on");
         return firebase
           .auth()
           .signInWithEmailAndPassword(email, password)
           .then((value) => {
-            console.log(value);
             router.push(`/dash/?email=${value.user?.email}`);
             setLoading(false);
           })
           .catch((err) => {
             setError(err);
-            console.log(err);
             setLoading(false);
           });
       });

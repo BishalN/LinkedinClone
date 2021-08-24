@@ -2,12 +2,19 @@ import React, { useState } from "react";
 import Modal from "react-modal";
 import { FiEdit2 } from "react-icons/fi";
 import { GrAdd } from "react-icons/gr";
+import { Formik } from "formik";
+
 import { UserInputWithLabel } from "./UserInputWithLabel";
 import { Button } from "../Button";
 import { IconWithHover } from "./IconWithHover";
 import { UserInputTextareaWithLabel } from "./UserInputTextareaWithLabel";
 import { EmploymentSelector, MonthSelector, YearSelector } from "./Selectors";
 import { AiOutlineClose } from "react-icons/ai";
+import {
+  handleUserExperienceValidation,
+  UserExperienceValues,
+} from "./handleUserExperienceValidation";
+import firebase from "../../utils/initFirebase";
 
 type UserExperienceModalProps = { isEditing?: boolean };
 
@@ -27,6 +34,49 @@ export const UserExperienceModal: React.FC<UserExperienceModalProps> = ({
     },
   };
   const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const handleSubmit = async (
+    {
+      title,
+      location,
+      headLine,
+      employmentType,
+      description,
+      companyName,
+      Industry,
+      endMonth,
+      endYear,
+      isStillOnRole,
+      startMonth,
+      startYear,
+    }: UserExperienceValues,
+    setSubmitting: (isSubmitting: boolean) => void
+  ) => {
+    const uid = firebase.auth().currentUser?.uid;
+    const userExpRef = firebase
+      .firestore()
+      .collection("users")
+      .doc(uid)
+      .collection("userExperiences")
+      .doc(uid);
+
+    await userExpRef.set(
+      {
+        title,
+        location,
+        headline: headLine,
+        description,
+        employmentType,
+        companyName,
+        industry: Industry,
+        isStillOnRole,
+        startDate: `${startMonth}, ${startYear}`,
+        endDate: `${endMonth}, ${endYear}`,
+      },
+      { merge: true }
+    );
+    setSubmitting(false);
+  };
 
   return (
     <div>
@@ -76,82 +126,187 @@ export const UserExperienceModal: React.FC<UserExperienceModalProps> = ({
           />
         </div>
         <div className="border-b-2 border-gray-100" />
-        <form className="space-y-5 mt-5">
-          <UserInputWithLabel
-            label="Title"
-            placeholder="Ex. Product Manager"
-            id="title"
-            className="w-full"
-          />
+        <Formik
+          initialValues={{
+            title: "",
+            employmentType: "",
+            companyName: "",
+            location: "",
+            isStillOnRole: false,
+            startYear: "",
+            startMonth: "",
+            endMonth: "",
+            endYear: "",
+            headLine: "",
+            Industry: "",
+            description: "",
+          }}
+          validate={(values) => {
+            const err = handleUserExperienceValidation(values);
+            return err;
+          }}
+          onSubmit={(values, { setSubmitting }) => {
+            console.log("object");
+            handleSubmit(values, setSubmitting);
+          }}
+        >
+          {({
+            values,
+            errors,
+            touched,
+            handleChange,
+            handleBlur,
+            handleSubmit,
+            isSubmitting,
+          }) => (
+            <form className="space-y-5 mt-5" onSubmit={handleSubmit}>
+              <UserInputWithLabel
+                label="Title"
+                name="title"
+                placeholder="Ex. Product Manager"
+                id="title"
+                className="w-full"
+                value={values.title}
+                onChange={handleChange}
+                error={errors.title}
+                onBlur={handleBlur}
+              />
 
-          <div>
-            <span className="text-gray-500">Employment Type</span>
-            <EmploymentSelector className="w-full" />
-          </div>
+              <div>
+                <span className="text-gray-500">Employment Type</span>
+                <EmploymentSelector
+                  className="w-full"
+                  value={values.employmentType}
+                  onChange={handleChange}
+                  name="employmentType"
+                  onBlur={handleBlur}
+                />
+              </div>
 
-          <UserInputWithLabel
-            label="Company Name"
-            id="companyName"
-            placeholder="Ex. Microsoft"
-            className="w-full"
-          />
-          <UserInputWithLabel
-            label="Location"
-            placeholder="Ex. London United Kingdom"
-            id="location"
-            className="w-full"
-          />
-          <div className="flex items-center space-x-3">
-            <input
-              type="checkbox"
-              id="workStatus"
-              className="rounded text-blue-500 h-6 w-6 checked:outline-none"
-            />
-            <label htmlFor="workStatus">
-              I'm currently working in this role
-            </label>
-          </div>
+              <UserInputWithLabel
+                label="Company Name"
+                name="companyName"
+                value={values.companyName}
+                onChange={handleChange}
+                id="companyName"
+                placeholder="Ex. Microsoft"
+                className="w-full"
+                onBlur={handleBlur}
+                error={errors.companyName}
+              />
+              <UserInputWithLabel
+                label="Location"
+                placeholder="Ex. London United Kingdom"
+                name="location"
+                value={values.location}
+                onChange={handleChange}
+                id="location"
+                className="w-full"
+                onBlur={handleBlur}
+                error={errors.location}
+              />
+              <div className="flex items-center space-x-3">
+                <input
+                  type="checkbox"
+                  name="isStillOnRole"
+                  checked={values.isStillOnRole}
+                  onChange={handleChange}
+                  id="workStatus"
+                  className="rounded text-blue-500 h-6 w-6 checked:outline-none"
+                />
+                <label htmlFor="workStatus">
+                  I'm currently working in this role
+                </label>
+              </div>
 
-          <div>
-            <span className="text-gray-600">Start Date</span>
-            <div className="flex space-x-7 ">
-              <MonthSelector className="w-1/2" />
-              <YearSelector className="w-1/2" />
-            </div>
-          </div>
+              <div>
+                <span className="text-gray-600">Start Date</span>
+                {errors.startMonth && (
+                  <span className="text-red-500 block">
+                    {errors.startMonth}
+                  </span>
+                )}
+                <div className="flex space-x-7 ">
+                  <MonthSelector
+                    className="w-1/2"
+                    name="startMonth"
+                    value={values.startMonth}
+                    onChange={handleChange}
+                  />
+                  <YearSelector
+                    className="w-1/2"
+                    name="startYear"
+                    value={values.startYear}
+                    onChange={handleChange}
+                  />
+                </div>
+              </div>
 
-          <div>
-            <span className="text-gray-600">End Date</span>
-            <div className="flex space-x-7 ">
-              <MonthSelector className="w-1/2" />
-              <YearSelector className="w-1/2" />
-            </div>
-          </div>
+              <div
+                className={
+                  values.isStillOnRole ? "bg-gray-200 rounded-xl p-2" : ""
+                }
+              >
+                <span className="text-gray-600">End Date</span>
+                <div className="flex space-x-7 ">
+                  <MonthSelector
+                    className="w-1/2"
+                    name="endMonth"
+                    value={values.endMonth}
+                    disabled={values.isStillOnRole}
+                    onChange={handleChange}
+                  />
+                  <YearSelector
+                    className="w-1/2"
+                    name="endYear"
+                    value={values.endYear}
+                    disabled={values.isStillOnRole}
+                    onChange={handleChange}
+                  />
+                </div>
+              </div>
 
-          <UserInputWithLabel
-            label="Head Line"
-            placeholder="E.x Software architect"
-            id="headLine"
-            className="w-full"
-          />
-          <UserInputWithLabel
-            label="Industry"
-            placeholder="E.g Software development"
-            id="Industry"
-            className="w-full"
-          />
-          <UserInputTextareaWithLabel
-            label="Description"
-            id="description"
-            placeholder="Desribe your role"
-            className="w-full"
-          />
-          <div className="flex justify-end">
-            <Button variant="filled" type="button" className="">
-              Save
-            </Button>
-          </div>
-        </form>
+              <UserInputWithLabel
+                label="Head Line"
+                placeholder="E.x Software architect"
+                id="headLine"
+                className="w-full"
+                name="headLine"
+                value={values.headLine}
+                onChange={handleChange}
+                onBlur={handleBlur}
+                error={errors.headLine}
+              />
+              <UserInputWithLabel
+                label="Industry"
+                placeholder="E.g Software development"
+                id="Industry"
+                className="w-full"
+                value={values.Industry}
+                name="Industry"
+                onChange={handleChange}
+                onBlur={handleBlur}
+                error={errors.Industry}
+              />
+              <UserInputTextareaWithLabel
+                label="Description"
+                id="description"
+                placeholder="Desribe your role"
+                className="w-full"
+                name="description"
+                value={values.description}
+                onChange={handleChange}
+                onBlur={handleBlur}
+                error={errors.description}
+              />
+              <div className="flex justify-end">
+                <Button variant="filled" type="submit" loading={isSubmitting}>
+                  Save
+                </Button>
+              </div>
+            </form>
+          )}
+        </Formik>
       </Modal>
     </div>
   );

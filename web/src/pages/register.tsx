@@ -10,6 +10,7 @@ import { useState } from "react";
 import firebase from "../utils/initFirebase";
 import { Alert } from "../components/Alert";
 import { useRouter } from "next/dist/client/router";
+import { userPostRegisterActions } from "../utils/userPostRegister";
 
 const register: React.FC = () => {
   const [email, setEmail] = useState("");
@@ -25,8 +26,9 @@ const register: React.FC = () => {
     firebase
       .auth()
       .signInWithPopup(provider)
-      .then((value) => {
-        console.log(value);
+      .then(async (value) => {
+        await userPostRegisterActions(value);
+
         router.push(`/dash/?email=${value.user?.email}`);
       })
       .catch((err) => setError(err));
@@ -55,8 +57,8 @@ const register: React.FC = () => {
     firebase
       .auth()
       .createUserWithEmailAndPassword(email, password)
-      .then((value) => {
-        console.log(value);
+      .then(async (value) => {
+        await userPostRegisterActions(value);
         setLoading(false);
         router.push(`/dash/?email=${value.user?.email}`);
       })
