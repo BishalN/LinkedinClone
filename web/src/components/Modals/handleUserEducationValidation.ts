@@ -14,6 +14,17 @@ export type UserEducationValue = {
   description: string;
 };
 
+export type UserEduBack = {
+  school: string;
+  degree: string;
+  fieldOfStudy: string;
+  grade: string;
+  activitiesAndSociety: string;
+  description: string;
+  startDate: string;
+  endDate: string;
+};
+
 type edError = {
   school?: string;
   degree?: string;

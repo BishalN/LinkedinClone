@@ -13,6 +13,19 @@ export type UserExperienceValues = {
   description: string;
 };
 
+export type UserExpBack = {
+  title: string;
+  employmentType: string;
+  companyName: string;
+  location: string;
+  isStillOnRole: boolean;
+  headLine: string;
+  industry: string;
+  description: string;
+  startDate: string;
+  endDate: string;
+};
+
 type ExpError = {
   title?: string;
   employmentType?: string;

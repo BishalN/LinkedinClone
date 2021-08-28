@@ -1,7 +1,5 @@
 import React from "react";
-
 import { LoggedInLayout } from "../../components/LoggedInLayout";
-import firebase from "../../utils/initFirebase";
 import { SiUpwork } from "react-icons/si";
 import { MdSchool } from "react-icons/md";
 import { UserInfoModal } from "../../components/Modals/UserInfoModal";
@@ -9,9 +7,19 @@ import { UserAboutModal } from "../../components/Modals/UserAboutModal";
 import { UserExperienceModal } from "../../components/Modals/UserExperienceModal";
 import { UserEducationModal } from "../../components/Modals/UserEducationModal";
 import { UserPhotoModal } from "../../components/Modals/UserPhotoModal";
+import { useQuery } from "react-query";
+import { getUserInfo } from "../../utils/queryFunctions";
+import { Spinner } from "../../components/Spinner";
 
 const Profile = () => {
-  const imageUrl = firebase.auth().currentUser?.photoURL;
+  const { data, isLoading } = useQuery("userInfo", getUserInfo);
+
+  if (isLoading) {
+    return <Spinner size="4" />;
+  } else {
+    console.log();
+  }
+
   return (
     <LoggedInLayout>
       {/* profile section */}
@@ -21,9 +29,8 @@ const Profile = () => {
           <UserPhotoModal />
           <div className="flex justify-between">
             <div>
-              {/* name */}
               <h3 className="text-2xl text-gray-800 uppercase font-semibold">
-                Bishal Neupane
+                {data?.firstName} {data?.lastName}
               </h3>
               {/* position */}
               <h4 className="text-base text-gray-700">Web and App developer</h4>
@@ -161,5 +168,9 @@ const Profile = () => {
     </LoggedInLayout>
   );
 };
+
+// export const getServerSideProps:GetServerSideProps = async (ctx) {
+// return {}
+// }
 
 export default Profile;

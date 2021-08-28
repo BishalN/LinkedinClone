@@ -15,6 +15,7 @@ import {
   UserExperienceValues,
 } from "./handleUserExperienceValidation";
 import firebase from "../../utils/initFirebase";
+import { useSetExperience } from "../../hooks/useSetExperience";
 
 type UserExperienceModalProps = { isEditing?: boolean };
 
@@ -34,49 +35,7 @@ export const UserExperienceModal: React.FC<UserExperienceModalProps> = ({
     },
   };
   const [isModalOpen, setIsModalOpen] = useState(false);
-
-  const handleSubmit = async (
-    {
-      title,
-      location,
-      headLine,
-      employmentType,
-      description,
-      companyName,
-      Industry,
-      endMonth,
-      endYear,
-      isStillOnRole,
-      startMonth,
-      startYear,
-    }: UserExperienceValues,
-    setSubmitting: (isSubmitting: boolean) => void
-  ) => {
-    const uid = firebase.auth().currentUser?.uid;
-    const userExpRef = firebase
-      .firestore()
-      .collection("users")
-      .doc(uid)
-      .collection("userExperiences")
-      .doc(uid);
-
-    await userExpRef.set(
-      {
-        title,
-        location,
-        headline: headLine,
-        description,
-        employmentType,
-        companyName,
-        industry: Industry,
-        isStillOnRole,
-        startDate: `${startMonth}, ${startYear}`,
-        endDate: `${endMonth}, ${endYear}`,
-      },
-      { merge: true }
-    );
-    setSubmitting(false);
-  };
+  const { mutateAsync, isLoading, isSuccess, error } = useSetExperience();
 
   return (
     <div>
@@ -145,9 +104,40 @@ export const UserExperienceModal: React.FC<UserExperienceModalProps> = ({
             const err = handleUserExperienceValidation(values);
             return err;
           }}
-          onSubmit={(values, { setSubmitting }) => {
-            console.log("object");
-            handleSubmit(values, setSubmitting);
+          onSubmit={async (
+            {
+              title,
+              Industry,
+              companyName,
+              description,
+              employmentType,
+              endMonth,
+              endYear,
+              headLine,
+              isStillOnRole,
+              location,
+              startMonth,
+              startYear,
+            },
+            { setSubmitting }
+          ) => {
+            const data = {
+              title,
+              industry: Industry,
+              companyName,
+              description,
+              employmentType,
+              headLine,
+              isStillOnRole,
+              location,
+              startDate: `${startMonth}, ${startYear}`,
+              endDate: `${endMonth}, ${endYear}`,
+            };
+            await mutateAsync(data);
+            setSubmitting(false);
+            if (!isLoading && !error) {
+              setIsModalOpen(false);
+            }
           }}
         >
           {({

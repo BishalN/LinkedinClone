@@ -10,11 +10,8 @@ import { UserInputTextareaWithLabel } from "./UserInputTextareaWithLabel";
 import { IconWithHover } from "./IconWithHover";
 import { MonthSelector, YearSelector } from "./Selectors";
 import { AiOutlineClose } from "react-icons/ai";
-import {
-  handleUserEducationValidation,
-  UserEducationValue,
-} from "./handleUserEducationValidation";
-import firebase from "../../utils/initFirebase";
+import { handleUserEducationValidation } from "./handleUserEducationValidation";
+import { useSetEducation } from "../../hooks/useSetEducation";
 
 type UserEducationModalProps = { isEditing?: boolean };
 
@@ -34,46 +31,7 @@ export const UserEducationModal: React.FC<UserEducationModalProps> = ({
     },
   };
   const [isModalOpen, setIsModalOpen] = useState(false);
-
-  const handleSubmit = async (
-    {
-      endYear,
-      activitiesAndSociety,
-      degree,
-      description,
-      endMonth,
-      fieldOfStudy,
-      grade,
-      school,
-      startMonth,
-      startYear,
-    }: UserEducationValue,
-    setSubmitting: (isSubmitting: boolean) => void
-  ) => {
-    const uid = firebase.auth().currentUser?.uid;
-    const userEducationRef = firebase
-      .firestore()
-      .collection("users")
-      .doc(uid)
-      .collection("userEducations")
-      .doc(uid);
-
-    await userEducationRef.set(
-      {
-        degree,
-        description,
-        grade,
-        school,
-        fieldOfStudy,
-        activitiesAndSociety,
-        startDate: `${startMonth}, ${startYear}`,
-        endDate: `${endMonth}, ${endYear}`,
-      },
-      { merge: true }
-    );
-
-    setSubmitting(false);
-  };
+  const { mutateAsync, isLoading, error, isSuccess } = useSetEducation();
 
   return (
     <div>
@@ -140,8 +98,37 @@ export const UserEducationModal: React.FC<UserEducationModalProps> = ({
             const err = handleUserEducationValidation(values);
             return err;
           }}
-          onSubmit={(values, { setSubmitting }) => {
-            handleSubmit(values, setSubmitting);
+          onSubmit={async (
+            {
+              startYear,
+              startMonth,
+              endMonth,
+              activitiesAndSociety,
+              degree,
+              description,
+              endYear,
+              fieldOfStudy,
+              grade,
+              school,
+            },
+            { setSubmitting }
+          ) => {
+            const data = {
+              degree,
+              description,
+              grade,
+              school,
+              fieldOfStudy,
+              activitiesAndSociety,
+              startDate: `${startMonth}, ${startYear}`,
+              endDate: `${endMonth}, ${endYear}`,
+            };
+
+            await mutateAsync(data);
+
+            if (!isLoading && !error) {
+              setIsModalOpen(false);
+            }
           }}
         >
           {({

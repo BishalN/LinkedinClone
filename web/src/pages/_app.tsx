@@ -1,6 +1,15 @@
 import "../styles/global.css";
+import { QueryClientProvider, QueryClient } from "react-query";
+import { ReactQueryDevtools } from "react-query/devtools";
 
-// This default export is required in a new `pages/_app.js` file.
+const queryClient = new QueryClient();
+
+//@ts-ignore
 export default function MyApp({ Component, pageProps }) {
-  return <Component {...pageProps} />;
+  return (
+    <QueryClientProvider client={queryClient}>
+      <Component {...pageProps} />;
+      <ReactQueryDevtools />
+    </QueryClientProvider>
+  );
 }

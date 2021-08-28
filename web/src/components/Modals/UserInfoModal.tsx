@@ -8,12 +8,9 @@ import { UserInputWithLabel } from "./UserInputWithLabel";
 import { Button } from "../Button";
 import { UserInputTextareaWithLabel } from "./UserInputTextareaWithLabel";
 import { IconWithHover } from "./IconWithHover";
-import {
-  handleUserInfoValidation,
-  UserInfoValues,
-} from "./handleUserInfoValidation";
+import { handleUserInfoValidation } from "./handleUserInfoValidation";
 import { IndustrySelector } from "./Selectors";
-import firebase from "firebase";
+import { useSetInfo } from "../../hooks/useSetInfo";
 
 export const UserInfoModal = () => {
   const customStyles = {
@@ -28,37 +25,7 @@ export const UserInfoModal = () => {
     },
   };
   const [isModalOpen, setIsModalOpen] = useState(false);
-
-  const handleSubmit = async (
-    values: UserInfoValues,
-    setSubmitting: (isSubmitting: boolean) => void
-  ) => {
-    const uid = firebase.auth().currentUser?.uid;
-    const userRef = firebase.firestore().collection("users").doc(uid);
-    const userInfoRef = firebase
-      .firestore()
-      .collection("users")
-      .doc(uid)
-      .collection("userInfo")
-      .doc(uid);
-    await userRef.set(
-      {
-        firstName: values.firstName,
-        lastName: values.lastName,
-      },
-      { merge: true }
-    );
-    await userInfoRef.set({
-      education: values.education,
-      headline: values.headLine,
-      countryRegion: values.countryRegion,
-      currentPosition: values.currentPosition,
-      location: values.location,
-      industry: values.industry,
-    });
-
-    setSubmitting(false);
-  };
+  const { mutateAsync, error, isSuccess } = useSetInfo();
 
   return (
     <div>
@@ -93,7 +60,6 @@ export const UserInfoModal = () => {
           />
         </div>
         <div className="border-b-2 border-gray-100" />
-        {/* form here */}
         <Formik
           initialValues={{
             firstName: "",
@@ -109,8 +75,15 @@ export const UserInfoModal = () => {
             const err = handleUserInfoValidation(values);
             return err;
           }}
-          onSubmit={(values, { setSubmitting }) => {
-            handleSubmit(values, setSubmitting);
+          onSubmit={async (values, { setSubmitting, setErrors }) => {
+            await mutateAsync(values);
+            if (error) {
+              console.log(error);
+            }
+            setSubmitting(false);
+            if (isSuccess) {
+              setIsModalOpen(false);
+            }
           }}
         >
           {({

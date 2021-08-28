@@ -5,7 +5,7 @@ import { Button } from "../Button";
 import { UserInputTextareaWithLabel } from "./UserInputTextareaWithLabel";
 import { IconWithHover } from "./IconWithHover";
 import { AiOutlineClose } from "react-icons/ai";
-import firebase from "../../utils/initFirebase";
+import { useSetAbout } from "../../hooks/useSetAbout";
 
 export const UserAboutModal = () => {
   const customStyles = {
@@ -21,24 +21,14 @@ export const UserAboutModal = () => {
   };
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [summary, setSummary] = useState("");
-  const [error, setError] = useState("");
-  const [isLoading, setIsloading] = useState(false);
+  const { mutateAsync, isLoading, error, isSuccess } = useSetAbout();
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (summary.length === 0)
-      return setError("Please write something about yourself");
-
-    setError("");
-    setIsloading(true);
-
-    const uid = firebase.auth().currentUser?.uid;
-
-    const ref = firebase.firestore().collection("users").doc(uid);
-
-    await ref.set({ about: summary }, { merge: true });
-
-    setIsloading(false);
+    await mutateAsync(summary);
+    if (isSuccess) {
+      setIsModalOpen(false);
+    }
   };
 
   return (
@@ -83,7 +73,7 @@ export const UserAboutModal = () => {
             placeholder="Summary"
             className="w-full"
             onChange={(e) => setSummary(e.target.value)}
-            error={error}
+            error={error as string}
             value={summary}
           />
 
