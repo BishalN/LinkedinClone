@@ -11,7 +11,7 @@ export const userPostRegisterActions = async (
     username: value.user?.uid,
     firstName: "",
     lastName: "",
-    headline: "",
+    headLine: "",
     currentPosition: "",
     countryRegion: "",
     location: "",

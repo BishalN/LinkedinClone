@@ -1,23 +1,23 @@
 import firebase from "../utils/initFirebase";
 import { useMutation, useQueryClient } from "react-query";
-import { UserEduBack } from "../components/Modals/handleUserEducationValidation";
+import { UserExpBack } from "../components/Modals/handleUserExperienceValidation";
 
-export const useSetEducation = () => {
+export const useDeleteExperience = () => {
   const queryClient = useQueryClient();
+
   return useMutation(
-    (edu: UserEduBack) => {
+    (exp: UserExpBack) => {
       const uid = firebase.auth().currentUser?.uid;
       return firebase
         .firestore()
         .collection("users")
         .doc(uid)
         .update({
-          educations: firebase.firestore.FieldValue.arrayUnion(edu),
+          experiences: firebase.firestore.FieldValue.arrayRemove(exp),
         });
     },
     {
       onSuccess: (data, variables) => {
-        console.log(data);
         queryClient.invalidateQueries("userInfo");
       },
     }

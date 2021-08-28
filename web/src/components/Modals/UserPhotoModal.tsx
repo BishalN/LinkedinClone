@@ -5,8 +5,18 @@ import { MdAddAPhoto } from "react-icons/md";
 import { IconWithHover } from "./IconWithHover";
 import { Button } from "../Button";
 import firebase from "../../utils/initFirebase";
+import { useQueryClient } from "react-query";
 
-export const UserPhotoModal = () => {
+type UserPhotoModalProps = {
+  profileUrl: string;
+  firstName: string;
+};
+
+export const UserPhotoModal: React.FC<UserPhotoModalProps> = ({
+  children,
+  firstName,
+  profileUrl,
+}) => {
   const customStyles = {
     content: {
       top: "50%",
@@ -27,8 +37,8 @@ export const UserPhotoModal = () => {
   return (
     <>
       <img
-        src="https://lh3.googleusercontent.com/a-/AOh14GgkyzMhg3ICB-Fy1_DLGWYSKiXRicilSoaXqJz7Eg=s96-c"
-        alt="Username"
+        src={profileUrl}
+        alt={firstName}
         onClick={() => setIsModalOpen(true)}
         className="rounded-full h-36 w-36 -mt-20 ring-4 ring-white"
       />
@@ -54,19 +64,27 @@ export const UserPhotoModal = () => {
 
         <div className="flex justify-center h-5/6 items-center">
           <img
-            src="https://lh3.googleusercontent.com/a-/AOh14GgkyzMhg3ICB-Fy1_DLGWYSKiXRicilSoaXqJz7Eg=s96-c"
-            alt="Username"
-            className="rounded-full h-60 w-60 -mt-20 "
+            src={profileUrl}
+            alt={firstName}
+            className="rounded-full h-44 w-44 -mt-20 "
           />
         </div>
 
-        <UserPhotoUploadModal />
+        <UserPhotoUploadModal profileUrl={profileUrl} firstName={firstName} />
       </Modal>
     </>
   );
 };
 
-const UserPhotoUploadModal = () => {
+type UserPhotoUploadModalProps = {
+  firstName: string;
+  profileUrl: string;
+};
+
+const UserPhotoUploadModal: React.FC<UserPhotoUploadModalProps> = ({
+  firstName,
+  profileUrl,
+}) => {
   const customStyles = {
     content: {
       top: "50%",
@@ -84,19 +102,27 @@ const UserPhotoUploadModal = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [imageUrl, setImageUrl] = useState("");
   const [imgFile, setImgFile] = useState<File>();
+  const [loading, setLoading] = useState(false);
+  const queryClient = useQueryClient();
 
   const handleUpload = async () => {
+    setLoading(true);
     const uid = firebase.auth().currentUser?.uid;
-    //points to the root of the storage bucket
     const storageRef = firebase.storage().ref();
     const imageRef = storageRef.child("images");
-
     const profileRef = imageRef.child(imgFile?.name!);
-
-    const res = await profileRef.put(imgFile!);
-
-    //update the user ref on the firestore database to point the newly uploaded profile picture
-    console.log(res);
+    await profileRef.put(imgFile!);
+    const profileUrl = await profileRef.getDownloadURL();
+    // update the user profile Picture url
+    await firebase
+      .firestore()
+      .collection("users")
+      .doc(uid)
+      .set({ profilePictureUrl: profileUrl }, { merge: true });
+    setLoading(false);
+    //update the cache to use new Image
+    queryClient.invalidateQueries("userInfo");
+    setIsModalOpen(false);
   };
 
   return (
@@ -132,12 +158,9 @@ const UserPhotoUploadModal = () => {
         <div className="border-b-2 border-gray-50"></div>
 
         <div className="flex space-y-10 flex-col justify-center items-center">
-          <h3 className="text-2xl mt-5">Bishal Keep your profile fresh</h3>
+          <h3 className="text-2xl mt-5">{firstName} Keep your profile fresh</h3>
           <img
-            src={
-              imageUrl ||
-              "https://lh3.googleusercontent.com/a-/AOh14GgkyzMhg3ICB-Fy1_DLGWYSKiXRicilSoaXqJz7Eg=s96-c"
-            }
+            src={imageUrl || profileUrl}
             alt="Username"
             className="rounded-full h-32 w-32"
           />
@@ -145,7 +168,11 @@ const UserPhotoUploadModal = () => {
 
         <div className="flex flex-col items-center mt-10">
           {imageUrl ? (
-            <Button variant="filled" onClick={() => handleUpload()}>
+            <Button
+              variant="filled"
+              loading={loading}
+              onClick={() => handleUpload()}
+            >
               Save the photo
             </Button>
           ) : (

@@ -12,16 +12,11 @@ import { EmploymentSelector, MonthSelector, YearSelector } from "./Selectors";
 import { AiOutlineClose } from "react-icons/ai";
 import {
   handleUserExperienceValidation,
-  UserExperienceValues,
+  UserExpBack,
 } from "./handleUserExperienceValidation";
-import firebase from "../../utils/initFirebase";
 import { useSetExperience } from "../../hooks/useSetExperience";
 
-type UserExperienceModalProps = { isEditing?: boolean };
-
-export const UserExperienceModal: React.FC<UserExperienceModalProps> = ({
-  isEditing = false,
-}) => {
+export const UserExperienceModal: React.FC = ({}) => {
   const customStyles = {
     content: {
       top: "50%",
@@ -39,29 +34,16 @@ export const UserExperienceModal: React.FC<UserExperienceModalProps> = ({
 
   return (
     <div>
-      {isEditing ? (
-        <IconWithHover
-          Icon={
-            <FiEdit2
-              size={25}
-              color="#4B5563"
-              onClick={() => setIsModalOpen(true)}
-              className="cursor-pointer"
-            />
-          }
-        />
-      ) : (
-        <IconWithHover
-          Icon={
-            <GrAdd
-              size={20}
-              color="#4B5563"
-              onClick={() => setIsModalOpen(true)}
-              className="cursor-pointer"
-            />
-          }
-        />
-      )}
+      <IconWithHover
+        Icon={
+          <GrAdd
+            size={20}
+            color="#4B5563"
+            onClick={() => setIsModalOpen(true)}
+            className="cursor-pointer"
+          />
+        }
+      />
 
       <Modal
         isOpen={isModalOpen}
@@ -72,7 +54,7 @@ export const UserExperienceModal: React.FC<UserExperienceModalProps> = ({
       >
         <div className="flex justify-between">
           <p className="text-xl font-medium text-gray-600 mb-3">
-            {isEditing ? "Edit experience" : "Add experience"}
+            Add experience
           </p>
           <IconWithHover
             Icon={
@@ -102,6 +84,7 @@ export const UserExperienceModal: React.FC<UserExperienceModalProps> = ({
           }}
           validate={(values) => {
             const err = handleUserExperienceValidation(values);
+            console.log(err);
             return err;
           }}
           onSubmit={async (
@@ -133,7 +116,8 @@ export const UserExperienceModal: React.FC<UserExperienceModalProps> = ({
               startDate: `${startMonth}, ${startYear}`,
               endDate: `${endMonth}, ${endYear}`,
             };
-            await mutateAsync(data);
+
+            await mutateAsync(data as UserExpBack);
             setSubmitting(false);
             if (!isLoading && !error) {
               setIsModalOpen(false);
@@ -199,7 +183,7 @@ export const UserExperienceModal: React.FC<UserExperienceModalProps> = ({
                 <input
                   type="checkbox"
                   name="isStillOnRole"
-                  checked={values.isStillOnRole}
+                  checked={values.isStillOnRole as boolean}
                   onChange={handleChange}
                   id="workStatus"
                   className="rounded text-blue-500 h-6 w-6 checked:outline-none"
@@ -243,14 +227,14 @@ export const UserExperienceModal: React.FC<UserExperienceModalProps> = ({
                     className="w-1/2"
                     name="endMonth"
                     value={values.endMonth}
-                    disabled={values.isStillOnRole}
+                    disabled={values.isStillOnRole as boolean}
                     onChange={handleChange}
                   />
                   <YearSelector
                     className="w-1/2"
                     name="endYear"
                     value={values.endYear}
-                    disabled={values.isStillOnRole}
+                    disabled={values.isStillOnRole as boolean}
                     onChange={handleChange}
                   />
                 </div>

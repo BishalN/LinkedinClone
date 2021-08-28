@@ -7,10 +7,22 @@ import firebase from "../utils/initFirebase";
 import { Button } from "./Button";
 import { useRouter } from "next/dist/client/router";
 
-export const AvatarWithDropDown = () => {
+type AvatarWithDropDownProps = {
+  fullName: string;
+  profileUrl: string;
+  headline: string;
+  username?: string;
+};
+
+export const AvatarWithDropDown: React.FC<AvatarWithDropDownProps> = ({
+  children,
+  fullName,
+  headline,
+  username,
+  profileUrl,
+}) => {
   const router = useRouter();
   const [isPopoverOpen, setIsPopoverOpen] = useState(false);
-  const imageUrl = firebase.auth().currentUser?.photoURL;
   if (!isServer) {
     return (
       <Popover
@@ -23,15 +35,15 @@ export const AvatarWithDropDown = () => {
           <div className="bg-white rounded-md border-2 drop-shadow-sm ">
             <div className="flex justify-center items-center space-x-2 px-2 py-2">
               <img
-                src={imageUrl || "https://picsum.photos/id/237/200/300"}
+                src={profileUrl || "https://picsum.photos/id/237/200/300"}
                 alt="MyPic"
                 className="rounded-full h-14 w-14"
               />
               <div>
                 <h4 className="font-semibold text-gray-600 text-lg uppercase">
-                  Bishal Neupane
+                  {fullName}
                 </h4>
-                <p className="text-sm">Web and App developer</p>
+                <p className="text-sm">{headline}</p>
               </div>
             </div>
 
@@ -39,7 +51,7 @@ export const AvatarWithDropDown = () => {
               <Button
                 variant="outlined"
                 className="h-10 w-full rounded-full"
-                onClick={() => router.push("/in/username")}
+                onClick={() => router.push(`/in/${username}`)}
               >
                 View Profile
               </Button>
@@ -60,7 +72,15 @@ export const AvatarWithDropDown = () => {
                 <MenuText text="Posts & Activity" />
                 <MenuText text="Job Posting Account" />
                 <Divider />
-                <MenuText text="Sign Out" classNames="mb-2" />
+                <p
+                  className="text-gray-500 cursor-pointer hover:underline"
+                  onClick={async () => {
+                    await firebase.auth().signOut();
+                    router.push("/login");
+                  }}
+                >
+                  Sign Out
+                </p>
               </div>
             </div>
           </div>
@@ -71,7 +91,7 @@ export const AvatarWithDropDown = () => {
           onClick={() => setIsPopoverOpen(!isPopoverOpen)}
         >
           <img
-            src={imageUrl || "https://picsum.photos/id/237/200/300"}
+            src={profileUrl || "https://picsum.photos/id/237/200/300"}
             alt="MyPic"
             className="rounded-full h-10 w-10"
           />

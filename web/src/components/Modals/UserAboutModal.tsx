@@ -7,7 +7,9 @@ import { IconWithHover } from "./IconWithHover";
 import { AiOutlineClose } from "react-icons/ai";
 import { useSetAbout } from "../../hooks/useSetAbout";
 
-export const UserAboutModal = () => {
+type UserAboutModalProps = { about: string };
+
+export const UserAboutModal: React.FC<UserAboutModalProps> = ({ about }) => {
   const customStyles = {
     content: {
       top: "50%",
@@ -26,7 +28,7 @@ export const UserAboutModal = () => {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     await mutateAsync(summary);
-    if (isSuccess) {
+    if (!isLoading && !error) {
       setIsModalOpen(false);
     }
   };
@@ -74,7 +76,7 @@ export const UserAboutModal = () => {
             className="w-full"
             onChange={(e) => setSummary(e.target.value)}
             error={error as string}
-            value={summary}
+            value={summary || about}
           />
 
           <div className="flex justify-end">

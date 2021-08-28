@@ -19,7 +19,8 @@
     "react-icons": "^4.2.0",
     "react-modal": "^3.14.3",
     "react-query": "^3.21.0",
-    "react-tiny-popover": "^6.0.10"
+    "react-tiny-popover": "^6.0.10",
+    "uuid": "^8.3.2"
   },
   "devDependencies": {
     "@babel/core": "^7.15.0",
@@ -35,6 +36,7 @@
     "@types/node": "^16.6.2",
     "@types/react": "^17.0.19",
     "@types/react-modal": "^3.12.1",
+    "@types/uuid": "^8.3.1",
     "autoprefixer": "^10.3.1",
     "babel-jest": "^25.1.0",
     "babel-loader": "^8.2.2",

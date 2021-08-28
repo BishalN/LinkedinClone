@@ -6,8 +6,12 @@ import { BsBoundingBoxCircles } from "react-icons/bs";
 import { IconWithText } from "./IconWithText";
 import { SearchBarWithLogo } from "./SearchBarWithLogo";
 import { AvatarWithDropDown } from "./AvatarWithDropdown";
+import { useQuery } from "react-query";
+import { getUserInfo } from "../utils/queryFunctions";
 
 export const NavBar: React.FC = () => {
+  const { data, isLoading } = useQuery("userInfo", getUserInfo);
+
   return (
     <nav className="bg-white mt-1 border-gray-200 border-b-2  sm:px-4 flex items-center justify-between overflow-hidden xl:px-16">
       <SearchBarWithLogo />
@@ -17,7 +21,13 @@ export const NavBar: React.FC = () => {
           text="Home"
           Icon={<FaHome size={25} color="#374151" title="Home" />}
         />
-        <AvatarWithDropDown />
+
+        <AvatarWithDropDown
+          fullName={`${data?.firstName} ${data?.lastName}`}
+          headline={data?.headLine}
+          profileUrl={data?.profilePictureUrl}
+          username={data?.username}
+        />
 
         <IconWithText
           text="Notifications"

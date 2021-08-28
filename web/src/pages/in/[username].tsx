@@ -1,7 +1,6 @@
 import React from "react";
 import { LoggedInLayout } from "../../components/LoggedInLayout";
-import { SiUpwork } from "react-icons/si";
-import { MdSchool } from "react-icons/md";
+import { MdSchool, MdWork } from "react-icons/md";
 import { UserInfoModal } from "../../components/Modals/UserInfoModal";
 import { UserAboutModal } from "../../components/Modals/UserAboutModal";
 import { UserExperienceModal } from "../../components/Modals/UserExperienceModal";
@@ -10,14 +9,13 @@ import { UserPhotoModal } from "../../components/Modals/UserPhotoModal";
 import { useQuery } from "react-query";
 import { getUserInfo } from "../../utils/queryFunctions";
 import { Spinner } from "../../components/Spinner";
+import { UserConfirmDeleteModal } from "../../components/Modals/UserConfirmDeleteModal";
 
 const Profile = () => {
   const { data, isLoading } = useQuery("userInfo", getUserInfo);
 
   if (isLoading) {
     return <Spinner size="4" />;
-  } else {
-    console.log();
   }
 
   return (
@@ -26,20 +24,28 @@ const Profile = () => {
       <section className="border-2  mt-5  border-gray-300  drop-shadow-xl pb-2 rounded-lg">
         <div className="bg-gradient-to-r from-yellow-400 via-red-500 to-pink-500 h-32 "></div>
         <div className="px-5 flex justify-center flex-col space-y-4">
-          <UserPhotoModal />
+          <UserPhotoModal
+            firstName={data?.firstName}
+            profileUrl={data?.profilePictureUrl}
+          />
           <div className="flex justify-between">
             <div>
               <h3 className="text-2xl text-gray-800 uppercase font-semibold">
                 {data?.firstName} {data?.lastName}
               </h3>
               {/* position */}
-              <h4 className="text-base text-gray-700">Web and App developer</h4>
+              <h4 className="text-base text-gray-700">{data?.headLine}</h4>
 
               {/* work place college and Location */}
               <p className="text-sm text-gray-500 w-64">
-                <span className="sm:hidden">Upwork.</span>
-                <span className="sm:hidden">Kalika Manavgyan</span>
-                Rupandehi District Nepal.{" "}
+                <span className="sm:hidden">
+                  {data?.experiences[0]?.companyName}
+                </span>
+                <span className="sm:hidden">
+                  {" "}
+                  {data?.educations[0]?.school}
+                </span>
+                {data?.location} {data?.countryRegion}.{" "}
                 <span className="text-blue-800 inline font-semibold text-base hover:underline cursor-pointer">
                   Contact Info
                 </span>
@@ -53,17 +59,34 @@ const Profile = () => {
 
             {/* work and study orgs */}
             <div className="hidden sm:block">
-              <div className="flex space-x-2 font-medium text-gray-600">
-                <MdSchool size={25} color="green" />
-                <p>Kalika Manavgyan</p>
-              </div>
-              <div className="flex space-x-2 font-medium text-gray-600">
-                <SiUpwork size={25} color="green" />
-                <p>Upwork</p>
-              </div>
+              {data?.educations.length > 0 ? (
+                <div className="flex space-x-2 font-medium text-gray-600">
+                  <MdSchool size={25} color="green" />
+                  <p> {data?.educations[0]?.school}</p>
+                </div>
+              ) : (
+                ""
+              )}
+              {data?.experiences.length > 0 ? (
+                <div className="flex space-x-2 font-medium text-gray-600">
+                  <MdWork size={25} color="green" />
+                  <p>{data?.experiences[0]?.companyName}</p>
+                </div>
+              ) : (
+                ""
+              )}
             </div>
 
-            <UserInfoModal />
+            <UserInfoModal
+              firstName={data?.firstName}
+              lastName={data?.lastName}
+              countryRegion={data?.countryRegion}
+              currentPosition={data?.currentPosition}
+              education={data?.educations[0]?.school}
+              headLine={data?.headLine}
+              industry={data?.industry}
+              location={data?.location}
+            />
           </div>
         </div>
       </section>
@@ -72,12 +95,9 @@ const Profile = () => {
       <section className="border-2 my-10 rounded-xl bg-white  border-gray-300 drop-shadow-xl py-6 px-5  space-y-5">
         <div className="flex justify-between">
           <h1 className="text-xl font-medium text-gray-500">About</h1>
-          <UserAboutModal />
+          <UserAboutModal about={data?.about} />
         </div>
-        <p>
-          Web & App developer. ML & DL learner. Great interest in acquiring and
-          improving skills. "Tech-enthusiast"
-        </p>
+        <p>{data?.about}</p>
       </section>
 
       {/* activity section */}
@@ -127,19 +147,24 @@ const Profile = () => {
           <UserExperienceModal />
         </div>
 
-        {/* experience details */}
-        <div className="flex space-x-5">
-          <SiUpwork size={40} color="green" />
-          <div className="w-full flex justify-between">
-            <div>
-              <h3 className="text-xl text-gray-700 font-semibold">
-                Freelance Web developer
-              </h3>
-              <p className="text-base text-gray-500">Upwork part time</p>
+        {data?.experiences.map((item: any, index: number) => (
+          <div className="flex space-x-5">
+            <MdWork size={40} color="green" />
+
+            <div className="w-full flex justify-between">
+              <div>
+                <h3 className="text-xl text-gray-700 font-semibold">
+                  {item.title}
+                </h3>
+                <p className="text-base text-gray-500">
+                  {item.companyName} {item.employmentType}
+                </p>
+              </div>
+
+              <UserConfirmDeleteModal isExperience data={item} />
             </div>
-            <UserExperienceModal isEditing={true} />
           </div>
-        </div>
+        ))}
 
         <div className="border-b-2 border-gray-200"></div>
 
@@ -149,28 +174,24 @@ const Profile = () => {
           <UserEducationModal />
         </div>
 
-        <div className="flex space-x-5">
-          <MdSchool size={40} color="green" />
+        {data?.educations.map((item: any, index: number) => (
+          <div className="flex space-x-5">
+            <MdSchool size={40} color="green" />
 
-          <div className="w-full flex justify-between">
-            <div>
-              <h3 className="text-xl text-gray-700 font-semibold">
-                Kalika Manavgyan
-              </h3>
-              <p className="text-base text-gray-500">
-                High School Diploma, Computer Engineering
-              </p>
+            <div className="w-full flex justify-between">
+              <div>
+                <h3 className="text-xl text-gray-700 font-semibold">
+                  {item.school}
+                </h3>
+                <p className="text-base text-gray-500">{item.degree}</p>
+              </div>
+              <UserConfirmDeleteModal isEducation data={item} />
             </div>
-            <UserEducationModal isEditing={true} />
           </div>
-        </div>
+        ))}
       </section>
     </LoggedInLayout>
   );
 };
-
-// export const getServerSideProps:GetServerSideProps = async (ctx) {
-// return {}
-// }
 
 export default Profile;

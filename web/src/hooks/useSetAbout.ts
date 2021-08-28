@@ -1,10 +1,3 @@
-// import axios from 'axios'
-// import { useMutation, queryCache } from 'react-query'
-
-// export default function useSavePost() {
-//   return useMutation(
-//     (values) =>
-//       axios.patch(`/api/posts/${values.id}`, values).then((res) => res.data),
 //     {
 //       onMutate: (values) => {
 //         const oldPost = queryCache.getQueryData(['posts', values.id])
@@ -22,9 +15,10 @@
 
 // we need to handle the optimistic updates and cached stuff
 import firebase from "../utils/initFirebase";
-import { useMutation, QueryCache } from "react-query";
+import { useMutation, QueryCache, useQueryClient } from "react-query";
 
 export const useSetAbout = () => {
+  const queryClient = useQueryClient();
   return useMutation(
     (about: string) => {
       const uid = firebase.auth().currentUser?.uid;
@@ -36,7 +30,7 @@ export const useSetAbout = () => {
     },
     {
       onSuccess: (data, variables) => {
-        console.log(data);
+        queryClient.invalidateQueries("userInfo");
       },
     }
   );
