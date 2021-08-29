@@ -42,11 +42,12 @@ const dash = () => {
         </div>
         {posts?.map((post) => (
           <PostCard
-            key={post.uuid}
+            key={post?.uuid}
             data={data}
-            creatorId={post.creatorId}
-            post={post.post}
-            uuid={post.uuid}
+            creatorId={post?.creatorId}
+            post={post?.post}
+            uuid={post?.uuid}
+            likes={post?.likes}
           />
         ))}
       </div>

@@ -16,7 +16,7 @@ export const useCreatePost = () => {
         .firestore()
         .collection("posts")
         .doc(uuid)
-        .set({ creatorId, post, uuid }, { merge: true });
+        .set({ creatorId, post, uuid, likes: [] }, { merge: true });
     },
     {
       onSuccess: (data, variables) => {

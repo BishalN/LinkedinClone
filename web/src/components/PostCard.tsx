@@ -1,24 +1,44 @@
 import React from "react";
-import { AiOutlineComment, AiOutlineLike } from "react-icons/ai";
+import firebase from "../utils/initFirebase";
+import { AiFillLike, AiOutlineComment, AiOutlineLike } from "react-icons/ai";
 import { useGetUserInfo } from "../hooks/useGetUserInfo";
 import { Spinner } from "./Spinner";
+import { useState } from "react";
+import { useMemo } from "react";
+import { useToggleLikePost } from "../hooks/useToggleLikePost";
 
 type PostCardProps = {
   creatorId: string;
   uuid: string;
   post: string;
   data?: any;
+  likes: Array<string>;
 };
 
 export const PostCard: React.FC<PostCardProps> = ({
-  children,
   creatorId,
   post,
+  likes,
+  uuid,
 }) => {
+  //information about the user who posted the post
   const { data, isLoading, error } = useGetUserInfo(creatorId);
+  const { mutate: toggleLike } = useToggleLikePost();
+  const userId = firebase.auth().currentUser?.uid;
+  const [isLiked, setIsLiked] = useState(false);
+
+  console.log(isLiked);
+
+  useMemo(() => {
+    const index = likes?.findIndex((val) => val === userId);
+    if (index >= 0) return setIsLiked(true);
+    return setIsLiked(false);
+  }, [userId, likes]);
+
   if (isLoading) {
     return <Spinner size="4" />;
   }
+
   return (
     <div className="px-4 py-3 w-full mt-5 shadow-sm border-2 border-gray-200 h-auto bg-white rounded-lg space-y-2">
       <div className="flex space-x-2 items-center">
@@ -38,16 +58,29 @@ export const PostCard: React.FC<PostCardProps> = ({
       <div className="text-gray-600  text-sm">{post}</div>
 
       {/* like and comment count */}
-      <div className="text-gray-500 text-xs">200 likes. 9 comments</div>
+      <div className="text-gray-500 text-xs">
+        {likes.length} {likes.length > 1 ? "likes" : "like"}. 9 comments
+      </div>
 
       {/* divider */}
       <div className="border-t-2 border-gray-100"></div>
 
       {/* like and comment box */}
       <div className="flex space-x-2 text-gray-500 text-sm ">
-        <div className="flex space-x-2 items-center hover:bg-gray-200 rounded-md p-2 cursor-pointer">
+        <div
+          className="flex space-x-2 items-center hover:bg-gray-200 rounded-md p-2 cursor-pointer"
+          onClick={() => {
+            //optimistic update does not really matter if we rollback or not if failed
+            setIsLiked(!isLiked);
+            toggleLike(uuid);
+          }}
+        >
           <span>Like</span>
-          <AiOutlineLike size={20} color="#4B5563" />
+          {isLiked ? (
+            <AiFillLike size={20} color="#4B5563" />
+          ) : (
+            <AiOutlineLike size={20} color="#4B5563" />
+          )}
         </div>
         <div className="flex space-x-2 items-center hover:bg-gray-200 rounded-md p-2 cursor-pointer">
           <span>Comment</span>
