@@ -43,8 +43,9 @@ const dash = () => {
         {posts?.map((post) => (
           <PostCard
             key={post?.uuid}
-            data={data}
             creatorId={post?.creatorId}
+            loggedInUserFullName={`${data?.firstName} ${data?.lastName}`}
+            loggedInUserProfile={data?.profilePictureUrl}
             post={post?.post}
             uuid={post?.uuid}
             likes={post?.likes}

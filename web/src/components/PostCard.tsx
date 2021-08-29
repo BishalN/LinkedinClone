@@ -6,13 +6,18 @@ import { Spinner } from "./Spinner";
 import { useState } from "react";
 import { useMemo } from "react";
 import { useToggleLikePost } from "../hooks/useToggleLikePost";
+import { Button } from "./Button";
+import { useCreateComment } from "../hooks/useCreateComment";
+import { v4 as uuidGen } from "uuid";
+import { useGetAllComments } from "../hooks/useGetAllComments";
 
 type PostCardProps = {
   creatorId: string;
   uuid: string;
   post: string;
-  data?: any;
   likes: Array<string>;
+  loggedInUserProfile: string;
+  loggedInUserFullName: string;
 };
 
 export const PostCard: React.FC<PostCardProps> = ({
@@ -20,20 +25,46 @@ export const PostCard: React.FC<PostCardProps> = ({
   post,
   likes,
   uuid,
+  loggedInUserProfile,
+  loggedInUserFullName,
 }) => {
   //information about the user who posted the post
-  const { data, isLoading, error } = useGetUserInfo(creatorId);
+  const { data: postCreator, isLoading, error } = useGetUserInfo(creatorId);
+  const {
+    data: commentsArr,
+    isLoading: commentsArrLoading,
+  } = useGetAllComments(uuid);
   const { mutate: toggleLike } = useToggleLikePost();
+  const {
+    mutateAsync: createComment,
+    isLoading: createCommentLoading,
+    error: createCommentError,
+  } = useCreateComment();
   const userId = firebase.auth().currentUser?.uid;
   const [isLiked, setIsLiked] = useState(false);
+  const [commentShow, setCommentShow] = useState(false);
+  const [comment, setComment] = useState("");
+  const [commentError, setCommentError] = useState("");
 
-  console.log(isLiked);
+  const loggedInUserId = firebase.auth().currentUser?.uid;
 
   useMemo(() => {
     const index = likes?.findIndex((val) => val === userId);
     if (index >= 0) return setIsLiked(true);
     return setIsLiked(false);
   }, [userId, likes]);
+
+  const handleCreateComment = async () => {
+    if (comment.length === 0) return setCommentError("Please write a comment");
+    await createComment({
+      comment,
+      commenterId: loggedInUserId!,
+      commenterProfile: loggedInUserProfile!,
+      postId: uuid,
+      uuid: uuidGen(),
+    });
+    setComment("");
+  };
 
   if (isLoading) {
     return <Spinner size="4" />;
@@ -43,15 +74,15 @@ export const PostCard: React.FC<PostCardProps> = ({
     <div className="px-4 py-3 w-full mt-5 shadow-sm border-2 border-gray-200 h-auto bg-white rounded-lg space-y-2">
       <div className="flex space-x-2 items-center">
         <img
-          src={data?.profilePictureUrl}
-          alt={data?.firstName}
+          src={postCreator?.profilePictureUrl}
+          alt={postCreator?.firstName}
           className="w-16 h-16 rounded-full"
         />
         <div className="">
           <p className="text-gray-700 font-semibold">
-            {data?.firstName} {data?.lastName}
+            {postCreator?.firstName} {postCreator?.lastName}
           </p>
-          <p className="text-gray-500 text-xs">{data?.headLine}</p>
+          <p className="text-gray-500 text-xs">{postCreator?.headLine}</p>
         </div>
         <p className="text-gray-500 -mt-4 text-xs">Following</p>
       </div>
@@ -82,11 +113,67 @@ export const PostCard: React.FC<PostCardProps> = ({
             <AiOutlineLike size={20} color="#4B5563" />
           )}
         </div>
-        <div className="flex space-x-2 items-center hover:bg-gray-200 rounded-md p-2 cursor-pointer">
+        <div
+          className="flex space-x-2 items-center hover:bg-gray-200 rounded-md p-2 cursor-pointer"
+          onClick={() => {
+            //toggle the commentshow boolean
+            setCommentShow(!commentShow);
+          }}
+        >
           <span>Comment</span>
           <AiOutlineComment size={20} color="#4B5563" />
         </div>
       </div>
+      {commentShow && (
+        <div className="">
+          <div className="flex space-x-2 items-center">
+            <img
+              src={loggedInUserProfile}
+              alt={loggedInUserFullName}
+              className="w-12 h-12 rounded-full"
+            />
+            <input
+              type="text"
+              className="text-gray-500 text-sm w-full rounded-full"
+              placeholder="Add a comment..."
+              value={comment}
+              onChange={(e) => setComment(e.target.value)}
+            />
+            {commentError ||
+              (createCommentError && (
+                <span className="text-red-500 text-sm">
+                  {commentError} {createCommentError}
+                </span>
+              ))}
+            {comment.length > 3 && (
+              <Button
+                variant="filled"
+                onClick={handleCreateComment}
+                loading={createCommentLoading}
+              >
+                Post
+              </Button>
+            )}
+          </div>
+
+          {/* show other comments here */}
+          <div className="space-y-3 my-5">
+            {commentsArr?.map((comment) => (
+              <div className="flex space-x-3">
+                <img
+                  src={comment.commenterProfile}
+                  alt={comment.comment}
+                  className="h-12 w-12 rounded-full"
+                />
+                {/* comment box  */}
+                <div className="bg-gray-200 rounded-md p-2 w-full h-auto text-gray-700 text-base">
+                  {comment.comment}
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
     </div>
   );
 };

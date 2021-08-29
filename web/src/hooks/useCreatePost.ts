@@ -25,10 +25,3 @@ export const useCreatePost = () => {
     }
   );
 };
-
-//the posts are going to be on the root level of the firestore database we are going to have
-// userId
-// text or the body of the posts which can have images rich text datastructure
-// the likes as an array of maps
-// the comments will be subcollection inside the posts
-// the comment text and thats it and the ability to edit and remove the comment no reply stuff
