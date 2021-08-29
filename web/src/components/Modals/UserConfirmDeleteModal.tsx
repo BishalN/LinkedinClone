@@ -8,30 +8,22 @@ import { UserExpBack } from "./handleUserExperienceValidation";
 import { UserEduBack } from "./handleUserEducationValidation";
 import { useDeleteExperience } from "../../hooks/useDeleteExperience";
 import { useDelteEducation } from "../../hooks/useDeleteEducation";
+import { useDeleteComment } from "../../hooks/useDeleteComment";
 
 type UserConfirmDeleteModalProps = {
   isEducation?: boolean;
   isExperience?: boolean;
-  data: UserExpBack | UserEduBack;
+  isComment?: boolean;
+  data: UserExpBack | UserEduBack | { postId: string; commentId: string };
 };
 
 export const UserConfirmDeleteModal: React.FC<UserConfirmDeleteModalProps> = ({
   isEducation,
   children,
   isExperience,
+  isComment,
   data,
 }) => {
-  const customStyles = {
-    content: {
-      top: "50%",
-      left: "50%",
-      right: "auto",
-      bottom: "auto",
-      marginRight: "-50%",
-      transform: "translate(-50%, -50%)",
-      width: "50vw",
-    },
-  };
   const [isModalOpen, setIsModalOpen] = useState(false);
   const {
     mutateAsync: delExp,
@@ -39,6 +31,11 @@ export const UserConfirmDeleteModal: React.FC<UserConfirmDeleteModalProps> = ({
   } = useDeleteExperience();
   // const {} = usedelet
   const { mutateAsync: delEdu, isLoading: delEduLoading } = useDelteEducation();
+  const {
+    mutateAsync: delCmnt,
+    isLoading: delCmntLoading,
+    error: delCmntErr,
+  } = useDeleteComment();
 
   return (
     <div>
@@ -46,7 +43,7 @@ export const UserConfirmDeleteModal: React.FC<UserConfirmDeleteModalProps> = ({
         Icon={
           <MdDelete
             size={25}
-            color="red"
+            color="#F87171"
             onClick={() => setIsModalOpen(true)}
           />
         }
@@ -54,13 +51,15 @@ export const UserConfirmDeleteModal: React.FC<UserConfirmDeleteModalProps> = ({
       <Modal
         isOpen={isModalOpen}
         onRequestClose={() => setIsModalOpen(false)}
-        style={customStyles}
         overlayClassName="Overlay"
-        contentLabel="Edit Intro"
+        contentLabel="Confirm Deletion"
+        className="h-full w-full sm:h-1/4 sm:w-1/2 sm:mx-auto sm:mt-10 
+        p-4 right-auto bottom-auto bg-white border-none rounded-sm overflow-y-auto"
       >
         <div className="flex justify-between">
           <p className="text-xl font-medium text-gray-600 mb-3">
-            Delete {isEducation ? "Education" : "Experience"}
+            Delete {isEducation && "Education"} {isExperience && "Experience"}{" "}
+            {isComment && "Comment"}
           </p>
           <IconWithHover
             Icon={
@@ -80,13 +79,20 @@ export const UserConfirmDeleteModal: React.FC<UserConfirmDeleteModalProps> = ({
           <Button
             variant="filled"
             type="submit"
-            loading={delExpLoading || delEduLoading}
+            loading={delExpLoading || delEduLoading || delCmntLoading}
             onClick={async () => {
               if (isExperience) {
                 await delExp(data as UserExpBack);
                 setIsModalOpen(false);
               } else if (isEducation) {
                 await delEdu(data as UserEduBack);
+                setIsModalOpen(false);
+              } else if (isComment) {
+                //delete the comment
+                await delCmnt({
+                  commentId: (data as any).commentId!,
+                  postId: (data as any).postId!,
+                });
                 setIsModalOpen(false);
               }
             }}

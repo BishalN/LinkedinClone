@@ -10,9 +10,12 @@ import { Button } from "./Button";
 import { useCreateComment } from "../hooks/useCreateComment";
 import { v4 as uuidGen } from "uuid";
 import { useGetAllComments } from "../hooks/useGetAllComments";
+import { EditCommentModal } from "./Modals/editCommentModal";
+import { UserConfirmDeleteModal } from "./Modals/UserConfirmDeleteModal";
 
 type PostCardProps = {
   creatorId: string;
+  //this is the postId
   uuid: string;
   post: string;
   likes: Array<string>;
@@ -90,7 +93,9 @@ export const PostCard: React.FC<PostCardProps> = ({
 
       {/* like and comment count */}
       <div className="text-gray-500 text-xs">
-        {likes.length} {likes.length > 1 ? "likes" : "like"}. 9 comments
+        {likes.length} {likes.length > 1 ? "likes" : "like"}.{" "}
+        {commentsArr?.length}
+        {commentsArr && commentsArr.length > 1 ? "comments" : "comment"}
       </div>
 
       {/* divider */}
@@ -166,8 +171,23 @@ export const PostCard: React.FC<PostCardProps> = ({
                   className="h-12 w-12 rounded-full"
                 />
                 {/* comment box  */}
-                <div className="bg-gray-200 rounded-md p-2 w-full h-auto text-gray-700 text-base">
-                  {comment.comment}
+                <div className="bg-gray-100 rounded-md p-2 w-full h-auto text-gray-700 text-base flex justify-between">
+                  <div>{comment.comment}</div>
+                  <div className="flex">
+                    {comment.commenterId === loggedInUserId && (
+                      <EditCommentModal comment={comment} postId={uuid} />
+                    )}
+
+                    {comment.commenterId === loggedInUserId ||
+                    creatorId === loggedInUserId ? (
+                      <UserConfirmDeleteModal
+                        isComment
+                        data={{ commentId: comment.uuid, postId: uuid }}
+                      />
+                    ) : (
+                      ""
+                    )}
+                  </div>
                 </div>
               </div>
             ))}
