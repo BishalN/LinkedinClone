@@ -7,10 +7,12 @@ import { AiOutlineClose } from "react-icons/ai";
 import { useCreatePost } from "../../hooks/useCreatePost";
 import { v4 as uuid } from "uuid";
 import firebase from "../../utils/initFirebase";
+import { useRouter } from "next/dist/client/router";
 
 type UserPostModalProps = {};
 
 export const UserPostModal: React.FC<UserPostModalProps> = ({}) => {
+  const router = useRouter();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [post, setPost] = useState("");
   const [error, setError] = useState("");
@@ -22,6 +24,11 @@ export const UserPostModal: React.FC<UserPostModalProps> = ({}) => {
     setError("");
     if (post.length === 0) return setError("Please write something");
     await mutateAsync({ uuid: uuid(), creatorId: creatorId!, post: post });
+    if (!err && !isLoading) {
+      setIsModalOpen(false);
+      setPost("");
+      router.push("/dash/?postCreate=success");
+    }
   };
 
   return (

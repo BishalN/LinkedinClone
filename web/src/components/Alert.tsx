@@ -1,9 +1,8 @@
 import React from "react";
 import { MdErrorOutline } from "react-icons/md";
-import { AiFillCaretRight } from "react-icons/ai";
-
-// Our alert will look simple will accept a variant
-// success failure
+import { AiFillCaretRight, AiOutlineClose } from "react-icons/ai";
+import { useState } from "react";
+import { IconWithHover } from "./Modals/IconWithHover";
 
 export type AlertProps = {
   variant?: "sucess" | "failure";
@@ -16,23 +15,36 @@ export const Alert: React.FC<AlertProps> = ({
   message,
   className,
 }) => {
-  if (variant === "sucess") {
-    return (
-      <div
-        className={`bg-green-500 max-w-md flex space-x-3
-          items-center rounded-lg px-3 py-3 text-white ${className}`}
-      >
-        <AiFillCaretRight size={30} /> <span>{message}</span>
-        {message}
-      </div>
-    );
-  }
+  const [isOpen, setIsOpen] = useState(true);
+
   return (
     <div
-      className={`bg-red-500 max-w-md rounded-lg px-3 py-3
-       text-white flex space-x-3 items-center ${className}`}
+      className={`${
+        isOpen ? "block" : "hidden"
+      } flex justify-between ${className} ${
+        variant === "sucess" ? "bg-green-500" : "bg-red-500"
+      } max-w-md rounded-lg px-3 py-3
+       text-white flex space-x-3 items-center`}
     >
-      <MdErrorOutline size={30} /> <span>{message}</span>
+      {variant === "sucess" ? (
+        <div className="flex items-center">
+          <AiFillCaretRight size={30} /> <span>{message}</span>
+        </div>
+      ) : (
+        <div className="flex items-center">
+          <MdErrorOutline size={30} /> <span>{message}</span>
+        </div>
+      )}
+
+      <IconWithHover
+        Icon={
+          <AiOutlineClose
+            size={25}
+            color="#4B5563"
+            onClick={() => setIsOpen(false)}
+          />
+        }
+      />
     </div>
   );
 };

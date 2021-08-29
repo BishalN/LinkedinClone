@@ -20,8 +20,7 @@ export const useCreatePost = () => {
     },
     {
       onSuccess: (data, variables) => {
-        // queryClient.invalidateQueries("userInfo");
-        console.log(data);
+        queryClient.invalidateQueries("posts");
       },
     }
   );
