@@ -17,18 +17,6 @@ import {
 import { useSetExperience } from "../../hooks/useSetExperience";
 
 export const UserExperienceModal: React.FC = ({}) => {
-  const customStyles = {
-    content: {
-      top: "50%",
-      left: "50%",
-      right: "auto",
-      bottom: "auto",
-      marginRight: "-50%",
-      transform: "translate(-50%, -50%)",
-      height: "90vh",
-      width: "50vw",
-    },
-  };
   const [isModalOpen, setIsModalOpen] = useState(false);
   const { mutateAsync, isLoading, isSuccess, error } = useSetExperience();
 
@@ -48,9 +36,10 @@ export const UserExperienceModal: React.FC = ({}) => {
       <Modal
         isOpen={isModalOpen}
         onRequestClose={() => setIsModalOpen(false)}
-        style={customStyles}
         overlayClassName="Overlay"
         contentLabel="Edit Intro"
+        className="h-full w-full sm:h-5/6 sm:mx-auto sm:mt-10 
+        p-4 sm:w-9/12 right-auto bottom-auto bg-white border-none rounded-sm overflow-y-auto"
       >
         <div className="flex justify-between">
           <p className="text-xl font-medium text-gray-600 mb-3">

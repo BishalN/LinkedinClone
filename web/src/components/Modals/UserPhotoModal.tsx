@@ -17,21 +17,6 @@ export const UserPhotoModal: React.FC<UserPhotoModalProps> = ({
   firstName,
   profileUrl,
 }) => {
-  const customStyles = {
-    content: {
-      top: "50%",
-      left: "50%",
-      right: "auto",
-      bottom: "auto",
-      marginRight: "-50%",
-      transform: "translate(-50%, -50%)",
-      width: "50vw",
-      background: "black",
-      border: "none",
-      height: "70vh",
-      overflow: "hidden",
-    },
-  };
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   return (
@@ -46,7 +31,7 @@ export const UserPhotoModal: React.FC<UserPhotoModalProps> = ({
       <Modal
         isOpen={isModalOpen}
         onRequestClose={() => setIsModalOpen(false)}
-        style={customStyles}
+        className="h-full w-full sm:h-5/6 sm:mx-auto sm:mt-10 p-2 sm:w-9/12 right-auto bottom-auto  bg-gray-900 border-none overflow-hidden"
         overlayClassName="Overlay"
         contentLabel="Edit Intro"
       >
@@ -85,20 +70,6 @@ const UserPhotoUploadModal: React.FC<UserPhotoUploadModalProps> = ({
   firstName,
   profileUrl,
 }) => {
-  const customStyles = {
-    content: {
-      top: "50%",
-      left: "50%",
-      right: "auto",
-      bottom: "auto",
-      marginRight: "-50%",
-      transform: "translate(-50%, -50%)",
-      width: "50vw",
-      border: "none",
-      height: "70vh",
-      overflow: "hidden",
-    },
-  };
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [imageUrl, setImageUrl] = useState("");
   const [imgFile, setImgFile] = useState<File>();
@@ -138,7 +109,7 @@ const UserPhotoUploadModal: React.FC<UserPhotoUploadModalProps> = ({
       <Modal
         isOpen={isModalOpen}
         onRequestClose={() => setIsModalOpen(false)}
-        style={customStyles}
+        className="h-full w-full sm:h-5/6 sm:mx-auto sm:mt-10 p-2 sm:w-9/12 right-auto bottom-auto  bg-gray-50  overflow-hidden"
         overlayClassName="Overlay"
         contentLabel="Edit Intro"
       >

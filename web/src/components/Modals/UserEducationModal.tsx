@@ -18,18 +18,6 @@ type UserEducationModalProps = { isEditing?: boolean };
 export const UserEducationModal: React.FC<UserEducationModalProps> = ({
   isEditing = false,
 }) => {
-  const customStyles = {
-    content: {
-      top: "50%",
-      left: "50%",
-      right: "auto",
-      bottom: "auto",
-      marginRight: "-50%",
-      transform: "translate(-50%, -50%)",
-      height: "90vh",
-      width: "50vw",
-    },
-  };
   const [isModalOpen, setIsModalOpen] = useState(false);
   const { mutateAsync, isLoading, error, isSuccess } = useSetEducation();
 
@@ -62,7 +50,8 @@ export const UserEducationModal: React.FC<UserEducationModalProps> = ({
       <Modal
         isOpen={isModalOpen}
         onRequestClose={() => setIsModalOpen(false)}
-        style={customStyles}
+        className="h-full w-full sm:h-5/6 sm:mx-auto sm:mt-10 
+        p-4 sm:w-9/12 right-auto bottom-auto bg-white border-none rounded-sm overflow-y-auto"
         overlayClassName="Overlay"
         contentLabel="Edit Intro"
       >

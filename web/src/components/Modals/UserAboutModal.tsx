@@ -10,17 +10,6 @@ import { useSetAbout } from "../../hooks/useSetAbout";
 type UserAboutModalProps = { about: string };
 
 export const UserAboutModal: React.FC<UserAboutModalProps> = ({ about }) => {
-  const customStyles = {
-    content: {
-      top: "50%",
-      left: "50%",
-      right: "auto",
-      bottom: "auto",
-      marginRight: "-50%",
-      transform: "translate(-50%, -50%)",
-      width: "50vw",
-    },
-  };
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [summary, setSummary] = useState("");
   const { mutateAsync, isLoading, error, isSuccess } = useSetAbout();
@@ -49,9 +38,10 @@ export const UserAboutModal: React.FC<UserAboutModalProps> = ({ about }) => {
       <Modal
         isOpen={isModalOpen}
         onRequestClose={() => setIsModalOpen(false)}
-        style={customStyles}
         overlayClassName="Overlay"
         contentLabel="Edit Intro"
+        className="h-full w-full sm:h-1/2 sm:w-1/2 sm:mx-auto sm:mt-10 
+        p-4 right-auto bottom-auto bg-white border-none rounded-sm overflow-y-auto"
       >
         <div className="flex justify-between">
           <p className="text-xl font-medium text-gray-600 mb-3">Edit About</p>
