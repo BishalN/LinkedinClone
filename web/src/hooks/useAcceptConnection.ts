@@ -10,9 +10,6 @@ type TypeAcceptConnection = {
   message: string;
   //we also need the same but our own information so that we can save the information in other part of the data
   currentUserId: string;
-  currentUserProfileUrl: String;
-  currentUserHeadline: string;
-  currentUserFullName: string;
 };
 
 export const useAcceptConnection = () => {
@@ -24,9 +21,6 @@ export const useAcceptConnection = () => {
       headline,
       fullName,
       message,
-      currentUserProfileUrl,
-      currentUserFullName,
-      currentUserHeadline,
       currentUserId,
     }: TypeAcceptConnection) => {
       //adding the data to connections array
@@ -35,12 +29,7 @@ export const useAcceptConnection = () => {
         .collection("users")
         .doc(currentUserId)
         .update({
-          connections: firebase.firestore.FieldValue.arrayUnion({
-            userId,
-            profileUrl,
-            headline,
-            fullName,
-          }),
+          connections: firebase.firestore.FieldValue.arrayUnion(userId),
         });
 
       //removing the data from the connections requests array
@@ -61,12 +50,7 @@ export const useAcceptConnection = () => {
         .collection("users")
         .doc(userId)
         .update({
-          connections: firebase.firestore.FieldValue.arrayUnion({
-            userId: currentUserId,
-            fullName: currentUserFullName,
-            headline: currentUserHeadline,
-            profileUrl: currentUserProfileUrl,
-          }),
+          connections: firebase.firestore.FieldValue.arrayUnion(currentUserId),
         });
     },
     {

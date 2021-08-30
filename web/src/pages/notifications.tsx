@@ -25,10 +25,7 @@ const notifications = () => {
           profileUrl={req?.profileUrl}
           headline={req?.headline}
           message={req?.message}
-          currentUserFullName={`${userData.firstName} ${userData.lastName}`}
           currentUserId={userData.uuid}
-          currentUserHeadline={userData.headLine}
-          currentUserProfileUrl={userData.profilePictureUrl}
         />
       ))}
     </LoggedInLayout>

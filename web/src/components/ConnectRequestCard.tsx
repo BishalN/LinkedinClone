@@ -9,10 +9,7 @@ type ConnectRequestCardProps = {
   message: string;
   profileUrl: string;
   userId: string;
-  currentUserFullName: string;
-  currentUserHeadline: string;
   currentUserId: string;
-  currentUserProfileUrl: string;
 };
 
 export const ConnectRequestCard: React.FC<ConnectRequestCardProps> = ({
@@ -21,10 +18,7 @@ export const ConnectRequestCard: React.FC<ConnectRequestCardProps> = ({
   fullName,
   profileUrl,
   userId,
-  currentUserFullName,
-  currentUserProfileUrl,
   currentUserId,
-  currentUserHeadline,
 }) => {
   const {
     mutateAsync: acceptConnection,
@@ -43,10 +37,7 @@ export const ConnectRequestCard: React.FC<ConnectRequestCardProps> = ({
   const handleAcceptConnection = async () => {
     await acceptConnection({
       fullName,
-      currentUserFullName,
-      currentUserHeadline,
       currentUserId,
-      currentUserProfileUrl,
       headline,
       message,
       profileUrl,
