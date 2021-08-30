@@ -9,9 +9,6 @@ type TypeSendConnectionRequest = {
   fullName: string;
 };
 
-//the problem is we have to send our information to the recieved array rather then
-// theirs information
-
 export const useSendConnectionRequest = () => {
   const queryClient = useQueryClient();
   return useMutation(
@@ -24,13 +21,12 @@ export const useSendConnectionRequest = () => {
     }: TypeSendConnectionRequest) => {
       const LoggedInUserId = firebase.auth().currentUser?.uid;
       const connectionData = {
-        userId,
+        userId: LoggedInUserId,
         message,
         profileUrl,
         headline,
         fullName,
       };
-      console.log(connectionData);
       await firebase
         .firestore()
         .collection("users")

@@ -1,4 +1,6 @@
 import React from "react";
+import { useAcceptConnection } from "../hooks/useAcceptConnection";
+import { useRejectConnection } from "../hooks/useRejectConnection";
 import { Button } from "./Button";
 
 type ConnectRequestCardProps = {
@@ -6,6 +8,11 @@ type ConnectRequestCardProps = {
   headline: string;
   message: string;
   profileUrl: string;
+  userId: string;
+  currentUserFullName: string;
+  currentUserHeadline: string;
+  currentUserId: string;
+  currentUserProfileUrl: string;
 };
 
 export const ConnectRequestCard: React.FC<ConnectRequestCardProps> = ({
@@ -13,7 +20,40 @@ export const ConnectRequestCard: React.FC<ConnectRequestCardProps> = ({
   message,
   fullName,
   profileUrl,
+  userId,
+  currentUserFullName,
+  currentUserProfileUrl,
+  currentUserId,
+  currentUserHeadline,
 }) => {
+  const {
+    mutateAsync: acceptConnection,
+    isLoading: acceptConnectionLoading,
+  } = useAcceptConnection();
+
+  const {
+    mutateAsync: rejectConnection,
+    isLoading: rejectConnectionLoading,
+  } = useRejectConnection();
+
+  const handleRejectConnection = async () => {
+    await rejectConnection({ fullName, userId, profileUrl, message, headline });
+  };
+
+  const handleAcceptConnection = async () => {
+    await acceptConnection({
+      fullName,
+      currentUserFullName,
+      currentUserHeadline,
+      currentUserId,
+      currentUserProfileUrl,
+      headline,
+      message,
+      profileUrl,
+      userId,
+    });
+  };
+
   return (
     <div className="bg-gray-200 mt-5 rounded-md p-4 flex justify-between">
       <div className="flex space-x-3">
@@ -29,8 +69,25 @@ export const ConnectRequestCard: React.FC<ConnectRequestCardProps> = ({
         </div>
       </div>
       <div className="flex flex-col space-y-2 sm:flex-row sm:space-y-0  self-center sm:space-x-4">
-        <Button variant="filled">Accept</Button>
-        <Button variant="filled">Reject</Button>
+        <Button
+          variant="filled"
+          onClick={handleAcceptConnection}
+          loading={acceptConnectionLoading}
+          type="button"
+        >
+          Accept
+        </Button>
+        <Button
+          variant="filled"
+          type="button"
+          onClick={() => {
+            console.log("we got rejected");
+            handleRejectConnection();
+          }}
+          loading={rejectConnectionLoading}
+        >
+          Reject
+        </Button>
       </div>
     </div>
   );

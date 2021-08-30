@@ -20,7 +20,7 @@ export const userPostRegisterActions = async (
     educations: [],
     experiences: [],
     // will be an array of object containg the userId,headline,profileUrl and message
-    connectionRequestsRecieved: [],
+    connectionRequestsReceived: [],
     // will be an array of object containing the userId,headline and profileUrl
     connections: [],
     //will be an array of strings that contain the userId/uuid
