@@ -21,7 +21,14 @@ export const NavBar: React.FC = () => {
       <div className="flex space-x-10">
         <IconWithText
           text="Home"
-          Icon={<FaHome size={25} color="#374151" title="Home" />}
+          Icon={
+            <FaHome
+              size={25}
+              color="#374151"
+              title="Home"
+              onClick={() => router.push("/")}
+            />
+          }
         />
 
         <AvatarWithDropDown
@@ -33,7 +40,13 @@ export const NavBar: React.FC = () => {
 
         <IconWithText
           text="Notifications"
-          Icon={<IoMdNotifications size={25} color="#374151" />}
+          Icon={
+            <IoMdNotifications
+              size={25}
+              color="#374151"
+              onClick={() => router.push("/notifications")}
+            />
+          }
         />
         <IconWithText
           text="My Network"

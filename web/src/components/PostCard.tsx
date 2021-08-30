@@ -10,7 +10,7 @@ import { Button } from "./Button";
 import { useCreateComment } from "../hooks/useCreateComment";
 import { v4 as uuidGen } from "uuid";
 import { useGetAllComments } from "../hooks/useGetAllComments";
-import { EditCommentModal } from "./Modals/editCommentModal";
+import { EditCommentModal } from "./Modals/EditCommentModal";
 import { UserConfirmDeleteModal } from "./Modals/UserConfirmDeleteModal";
 
 type PostCardProps = {

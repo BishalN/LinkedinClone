@@ -7,6 +7,7 @@ export const userPostRegisterActions = async (
   await firebase.firestore().collection("users").doc(value.user?.uid).set({
     email: value.user?.email,
     profilePictureUrl: value.user?.photoURL,
+    uuid: value.user?.uid,
     about: "",
     username: value.user?.uid,
     firstName: "",
@@ -18,5 +19,11 @@ export const userPostRegisterActions = async (
     industry: "",
     educations: [],
     experiences: [],
+    // will be an array of object containg the userId,headline,profileUrl and message
+    connectionRequestsRecieved: [],
+    // will be an array of object containing the userId,headline and profileUrl
+    connections: [],
+    //will be an array of strings that contain the userId/uuid
+    connectionRequestsSent: [],
   });
 };
