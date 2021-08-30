@@ -8,9 +8,11 @@ import { SearchBarWithLogo } from "./SearchBarWithLogo";
 import { AvatarWithDropDown } from "./AvatarWithDropdown";
 import { useQuery } from "react-query";
 import { getUserInfo } from "../utils/queryFunctions";
+import { useRouter } from "next/dist/client/router";
 
 export const NavBar: React.FC = () => {
   const { data, isLoading } = useQuery("userInfo", getUserInfo);
+  const router = useRouter();
 
   return (
     <nav className="bg-white mt-1 border-gray-200 border-b-2  sm:px-4 flex items-center justify-between overflow-hidden xl:px-16">
@@ -35,7 +37,13 @@ export const NavBar: React.FC = () => {
         />
         <IconWithText
           text="My Network"
-          Icon={<FaNetworkWired size={25} color="#374151" />}
+          Icon={
+            <FaNetworkWired
+              size={25}
+              color="#374151"
+              onClick={() => router.push("/mynetwork")}
+            />
+          }
         />
 
         <IconWithText
