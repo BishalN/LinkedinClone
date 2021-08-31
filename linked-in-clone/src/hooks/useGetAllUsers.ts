@@ -1,15 +1,13 @@
-import firebase from "../utils/initFirebase";
-import { useQuery, useQueryClient } from "react-query";
+import firebase from '../utils/initFirebase';
+import { useQuery } from 'react-query';
 
 export const useGetAllUsers = () => {
-  const client = useQueryClient();
-  return useQuery("users", async () => {
-    //We can pull this information out of the querycache if we want to
+  return useQuery('users', async () => {
     const userId = firebase.auth().currentUser?.uid;
     const alreadyConnectedUsers: Array<string> = [];
     const userDoc = await firebase
       .firestore()
-      .collection("users")
+      .collection('users')
       .doc(userId)
       .get();
 
@@ -21,10 +19,10 @@ export const useGetAllUsers = () => {
 
     const LoggedInUserId = firebase.auth().currentUser?.uid;
     let users: Array<firebase.firestore.DocumentData> = [];
-    let userQuery = firebase.firestore().collection("users");
+    let userQuery = firebase.firestore().collection('users');
 
     const userSnapshots = await userQuery
-      .where("uuid", "!=", LoggedInUserId)
+      .where('uuid', '!=', LoggedInUserId)
       .get();
 
     userSnapshots.forEach((doc) => {

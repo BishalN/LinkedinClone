@@ -1,5 +1,4 @@
-import { title } from "process";
-import React, { ReactNode } from "react";
+import React, { ReactNode } from 'react';
 
 export type IconWithTextProps = {
   text: string;
@@ -17,7 +16,7 @@ export const IconWithText: React.FC<IconWithTextProps> = ({
       className={`${className} cursor-pointer flex flex-col justify-center items-center`}
     >
       <span>{Icon}</span>
-      <span className="hidden md:inline-block text-xs text-center">{text}</span>
+      <span className='hidden md:inline-block text-xs text-center'>{text}</span>
     </div>
   );
 };

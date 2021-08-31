@@ -11,7 +11,7 @@ import firebase from '../utils/initFirebase';
 import { userPostRegisterActions } from '../utils/userPostRegister';
 import { useHistory } from 'react-router-dom';
 
-export const Login: React.FC = ({}) => {
+export const Login: React.FC = () => {
   const history = useHistory();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');

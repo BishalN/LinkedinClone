@@ -1,7 +1,6 @@
-import firebase from "../utils/initFirebase";
-import { useMutation, QueryCache, useQueryClient } from "react-query";
-import { UserExpBack } from "../components/Modals/handleUserExperienceValidation";
-import { v4 as uuid } from "uuid";
+import firebase from '../utils/initFirebase';
+import { useMutation, useQueryClient } from 'react-query';
+import { UserExpBack } from '../components/Modals/handleUserExperienceValidation';
 
 export const useSetExperience = () => {
   const queryClient = useQueryClient();
@@ -11,7 +10,7 @@ export const useSetExperience = () => {
       const uid = firebase.auth().currentUser?.uid;
       return firebase
         .firestore()
-        .collection("users")
+        .collection('users')
         .doc(uid)
         .update({
           experiences: firebase.firestore.FieldValue.arrayUnion(exp),
@@ -19,7 +18,7 @@ export const useSetExperience = () => {
     },
     {
       onSuccess: (data, variables) => {
-        queryClient.invalidateQueries("userInfo");
+        queryClient.invalidateQueries('userInfo');
       },
     }
   );

@@ -1,7 +1,6 @@
-import { useRouter } from "next/dist/client/router";
-import { route } from "next/dist/server/router";
-import React from "react";
-import { UserConnectmodal } from "./Modals/UserConnectModal";
+import React from 'react';
+import { useHistory } from 'react-router-dom';
+import { UserConnectmodal } from './Modals/UserConnectModal';
 
 type UserConnectCardProps = {
   fullName: string;
@@ -22,25 +21,21 @@ export const UserConnectCard: React.FC<UserConnectCardProps> = ({
   username,
   loggedInUserUsername,
 }) => {
-  const router = useRouter();
+  const history = useHistory();
   return (
     <div
-      className="bg-white hover:shadow-2xl transition-shadow
+      className='bg-white hover:shadow-2xl transition-shadow
    ease-in-out duration-200 space-y-2 shadow-md  rounded-xl
-    p-4 flex flex-col items-center justify-center cursor-pointer"
+    p-4 flex flex-col items-center justify-center cursor-pointer'
     >
-      <img src={profileUrl} alt={fullName} className="rounded-full h-28 w-28" />
+      <img src={profileUrl} alt={fullName} className='rounded-full h-28 w-28' />
       <p
-        className="text-lg font-semibold text-gray-600 cursor-pointer "
-        onClick={() => router.push(`/in/${username}`)}
-        onMouseOver={() => {
-          console.log("object");
-          router.prefetch(`/in/${username}`);
-        }}
+        className='text-lg font-semibold text-gray-600 cursor-pointer '
+        onClick={() => history.push(`/in/${username}`)}
       >
         {fullName}
       </p>
-      <p className="text-gray-500 text-center">
+      <p className='text-gray-500 text-center'>
         {headline} {currentPosition}
       </p>
       <UserConnectmodal

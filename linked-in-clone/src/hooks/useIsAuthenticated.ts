@@ -1,13 +1,12 @@
-import { useEffect } from "react";
-import firebase from "../utils/initFirebase";
-import { useRouter } from "next/dist/client/router";
+import { useEffect } from 'react';
+import { useHistory } from 'react-router-dom';
+import firebase from '../utils/initFirebase';
 
 export const useIsAuth = () => {
-  const router = useRouter();
-  const userId = firebase.auth().currentUser?.uid;
+  const history = useHistory();
   useEffect(() => {
-    if (!userId) {
-      router.replace("/login?next=" + router.pathname);
-    }
-  }, [userId]);
+    firebase.auth().onAuthStateChanged((user) => {
+      if (!user) history.replace('/login');
+    });
+  }, [history]);
 };

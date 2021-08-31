@@ -1,11 +1,11 @@
-import firebase from "../utils/initFirebase";
-import { useMutation, useQuery, useQueryClient } from "react-query";
+import firebase from '../utils/initFirebase';
+import { useQuery } from 'react-query';
 
 export const useGetUserInfo = (userId: string) => {
-  return useQuery(["user", userId], async () => {
+  return useQuery(['user', userId], async () => {
     const userInfo = await firebase
       .firestore()
-      .collection("users")
+      .collection('users')
       .doc(userId)
       .get();
     return userInfo.data();

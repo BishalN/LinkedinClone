@@ -1,12 +1,12 @@
 import React from 'react';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
-import { Login } from '../src/pages/login';
-import { Landing } from './pages';
+import { Login } from '../src/pages/Login';
+import { Landing } from './pages/Landing';
 import { Profile } from './pages/in/Profile';
-import { Mynetwork } from './pages/mynetwork';
-import { Connection } from './pages/mynetwork/connections';
-import { Notification } from './pages/notifications';
-import { Register } from './pages/register';
+import { Mynetwork } from './pages/mynetwork/MyNetwork';
+import { Connection } from './pages/mynetwork/Connections';
+import { Notification } from './pages/Notification';
+import { Register } from './pages/Register';
 
 function App() {
   return (
