@@ -4,9 +4,10 @@ import firebase from '../utils/initFirebase';
 
 export const useIsAuth = () => {
   const history = useHistory();
+  const userId = firebase.auth().currentUser?.uid;
   useEffect(() => {
-    firebase.auth().onAuthStateChanged((user) => {
-      if (!user) history.replace('/login');
-    });
-  }, [history]);
+    if (!userId) {
+      history.replace('/login');
+    }
+  }, [userId, history]);
 };
