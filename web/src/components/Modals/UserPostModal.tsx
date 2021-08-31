@@ -27,7 +27,7 @@ export const UserPostModal: React.FC<UserPostModalProps> = ({}) => {
     if (!err && !isLoading) {
       setIsModalOpen(false);
       setPost("");
-      router.push("/dash/?postCreate=success");
+      router.push("/?postCreate=success");
     }
   };
 

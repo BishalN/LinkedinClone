@@ -35,7 +35,7 @@ const login: React.FC = () => {
         if (router.query.next === "string") {
           router.push(router.query.next);
         } else {
-          router.push(`/dash/?email=${value.user?.email}`);
+          router.push(`/`);
         }
       })
       .catch((err) => setError(err));
@@ -66,7 +66,7 @@ const login: React.FC = () => {
             if (router.query.next === "string") {
               router.push(router.query.next);
             } else {
-              router.push(`/dash/?email=${value.user?.email}`);
+              router.push(`/`);
             }
             setLoading(false);
           })

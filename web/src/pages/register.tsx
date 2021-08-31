@@ -29,7 +29,11 @@ const register: React.FC = () => {
       .then(async (value) => {
         await userPostRegisterActions(value);
 
-        router.push(`/dash/?email=${value.user?.email}`);
+        if (router.query.next === "string") {
+          router.push(router.query.next);
+        } else {
+          router.push(`/`);
+        }
       })
       .catch((err) => setError(err));
 
@@ -60,7 +64,11 @@ const register: React.FC = () => {
       .then(async (value) => {
         await userPostRegisterActions(value);
         setLoading(false);
-        router.push(`/dash/?email=${value.user?.email}`);
+        if (router.query.next === "string") {
+          router.push(router.query.next);
+        } else {
+          router.push(`/`);
+        }
       })
       .catch((err) => {
         setError(err);
