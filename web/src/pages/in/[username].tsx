@@ -1,4 +1,5 @@
 import React from "react";
+import firebase from "../../utils/initFirebase";
 import { LoggedInLayout } from "../../components/LoggedInLayout";
 import { MdSchool, MdWork } from "react-icons/md";
 import { UserInfoModal } from "../../components/Modals/UserInfoModal";
@@ -6,13 +7,27 @@ import { UserAboutModal } from "../../components/Modals/UserAboutModal";
 import { UserExperienceModal } from "../../components/Modals/UserExperienceModal";
 import { UserEducationModal } from "../../components/Modals/UserEducationModal";
 import { UserPhotoModal } from "../../components/Modals/UserPhotoModal";
-import { useQuery } from "react-query";
-import { getUserInfo } from "../../utils/queryFunctions";
 import { Spinner } from "../../components/Spinner";
 import { UserConfirmDeleteModal } from "../../components/Modals/UserConfirmDeleteModal";
+import { UsernameEditModal } from "../../components/Modals/UsernameEditModal";
+import { useRouter } from "next/dist/client/router";
+import { useGetUserByUsername } from "../../hooks/useGetUserByUsername";
+import { useState } from "react";
+import { useMemo } from "react";
 
 const Profile = () => {
-  const { data, isLoading } = useQuery("userInfo", getUserInfo);
+  const router = useRouter();
+  const username = router.query.username;
+  const LoggedInUserId = firebase.auth().currentUser?.uid;
+  const { data, isLoading } = useGetUserByUsername(username as string);
+
+  const [isUserProfile, setIsUserProfile] = useState(false);
+
+  useMemo(() => {
+    if (!isLoading && data?.uuid === LoggedInUserId) {
+      setIsUserProfile(true);
+    }
+  }, [LoggedInUserId, data, isLoading]);
 
   if (isLoading) {
     return <Spinner size="4" />;
@@ -77,16 +92,22 @@ const Profile = () => {
               )}
             </div>
 
-            <UserInfoModal
-              firstName={data?.firstName}
-              lastName={data?.lastName}
-              countryRegion={data?.countryRegion}
-              currentPosition={data?.currentPosition}
-              education={data?.educations[0]?.school}
-              headLine={data?.headLine}
-              industry={data?.industry}
-              location={data?.location}
-            />
+            <div className="flex">
+              {isUserProfile && (
+                <UserInfoModal
+                  firstName={data?.firstName}
+                  lastName={data?.lastName}
+                  countryRegion={data?.countryRegion}
+                  currentPosition={data?.currentPosition}
+                  education={data?.educations[0]?.school}
+                  headLine={data?.headLine}
+                  industry={data?.industry}
+                  location={data?.location}
+                />
+              )}
+
+              {isUserProfile && <UsernameEditModal username={data?.username} />}
+            </div>
           </div>
         </div>
       </section>
@@ -95,7 +116,7 @@ const Profile = () => {
       <section className="border-2 my-10 rounded-xl bg-white  border-gray-300 drop-shadow-xl py-6 px-5  space-y-5">
         <div className="flex justify-between">
           <h1 className="text-xl font-medium text-gray-500">About</h1>
-          <UserAboutModal about={data?.about} />
+          {isUserProfile && <UserAboutModal about={data?.about} />}
         </div>
         <p>{data?.about}</p>
       </section>
@@ -144,7 +165,7 @@ const Profile = () => {
         <div className="flex justify-between">
           <h1 className="text-xl font-medium text-gray-500">Experience</h1>
 
-          <UserExperienceModal />
+          {isUserProfile && <UserExperienceModal />}
         </div>
 
         {data?.experiences.map((item: any, index: number) => (
@@ -161,7 +182,9 @@ const Profile = () => {
                 </p>
               </div>
 
-              <UserConfirmDeleteModal isExperience data={item} />
+              {isUserProfile && (
+                <UserConfirmDeleteModal isExperience data={item} />
+              )}
             </div>
           </div>
         ))}
@@ -171,7 +194,7 @@ const Profile = () => {
         {/* education */}
         <div className="mt-5 flex justify-between">
           <h1 className="text-xl font-medium text-gray-500">Education</h1>
-          <UserEducationModal />
+          {isUserProfile && <UserEducationModal />}
         </div>
 
         {data?.educations.map((item: any, index: number) => (
@@ -185,7 +208,9 @@ const Profile = () => {
                 </h3>
                 <p className="text-base text-gray-500">{item.degree}</p>
               </div>
-              <UserConfirmDeleteModal isEducation data={item} />
+              {isUserProfile && (
+                <UserConfirmDeleteModal isEducation data={item} />
+              )}
             </div>
           </div>
         ))}

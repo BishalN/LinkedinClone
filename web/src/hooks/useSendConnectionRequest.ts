@@ -7,6 +7,7 @@ type TypeSendConnectionRequest = {
   profileUrl: string;
   headline: string;
   fullName: string;
+  username: string;
 };
 
 export const useSendConnectionRequest = () => {
@@ -18,6 +19,7 @@ export const useSendConnectionRequest = () => {
       profileUrl,
       headline,
       fullName,
+      username,
     }: TypeSendConnectionRequest) => {
       const LoggedInUserId = firebase.auth().currentUser?.uid;
       const connectionData = {
@@ -26,6 +28,7 @@ export const useSendConnectionRequest = () => {
         profileUrl,
         headline,
         fullName,
+        username,
       };
       await firebase
         .firestore()

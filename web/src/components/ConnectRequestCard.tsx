@@ -1,3 +1,4 @@
+import { useRouter } from "next/dist/client/router";
 import React from "react";
 import { useAcceptConnection } from "../hooks/useAcceptConnection";
 import { useRejectConnection } from "../hooks/useRejectConnection";
@@ -10,6 +11,7 @@ type ConnectRequestCardProps = {
   profileUrl: string;
   userId: string;
   currentUserId: string;
+  username: string;
 };
 
 export const ConnectRequestCard: React.FC<ConnectRequestCardProps> = ({
@@ -19,6 +21,7 @@ export const ConnectRequestCard: React.FC<ConnectRequestCardProps> = ({
   profileUrl,
   userId,
   currentUserId,
+  username,
 }) => {
   const {
     mutateAsync: acceptConnection,
@@ -45,16 +48,24 @@ export const ConnectRequestCard: React.FC<ConnectRequestCardProps> = ({
     });
   };
 
+  const router = useRouter();
+
   return (
     <div className="bg-gray-200 mt-5 rounded-md p-4 flex justify-between">
       <div className="flex space-x-3">
         <img
           src={profileUrl}
           alt={fullName}
-          className="h-20 w-20 rounded-full"
+          className="h-20 w-20 rounded-full cursor-pointer"
+          onClick={() => router.push(`/in/${username}`)}
         />
         <div className="">
-          <p className="text-gray-800 font-semibold text-lg">{fullName}</p>
+          <p
+            className="text-gray-800 font-semibold text-lg hover:underline"
+            onClick={() => router.push(`/in/${username}`)}
+          >
+            {fullName}
+          </p>
           <p className="text-gray-500 text-xs">{headline}</p>
           <p className="text-gray-800 text-xs italic">message: {message}</p>
         </div>

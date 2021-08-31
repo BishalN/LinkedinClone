@@ -20,6 +20,7 @@ const notifications = () => {
       </h3>
       {userData?.connectionRequestsReceived.map((req: any) => (
         <ConnectRequestCard
+          username={req?.username}
           userId={req?.userId}
           fullName={req?.fullName}
           profileUrl={req?.profileUrl}

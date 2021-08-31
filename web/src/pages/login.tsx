@@ -8,13 +8,10 @@ import { Button } from "../components/Button";
 import { Input } from "../components/Input";
 import { Layout } from "../components/Layout";
 import LogoSvg from "../components/LogoSvg";
-import { useIsAuth } from "../hooks/useIsAuthenticated";
 import firebase from "../utils/initFirebase";
 import { userPostRegisterActions } from "../utils/userPostRegister";
 
 const login: React.FC = () => {
-  // if already authenticated push to the dash
-  useIsAuth();
   const router = useRouter();
 
   const [email, setEmail] = useState("");
@@ -35,7 +32,11 @@ const login: React.FC = () => {
         if (isNewUser) {
           await userPostRegisterActions(value);
         }
-        router.push(`/dash/?email=${value.user?.email}`);
+        if (router.query.next === "string") {
+          router.push(router.query.next);
+        } else {
+          router.push(`/dash/?email=${value.user?.email}`);
+        }
       })
       .catch((err) => setError(err));
   };
@@ -62,7 +63,11 @@ const login: React.FC = () => {
           .auth()
           .signInWithEmailAndPassword(email, password)
           .then((value) => {
-            router.push(`/dash/?email=${value.user?.email}`);
+            if (router.query.next === "string") {
+              router.push(router.query.next);
+            } else {
+              router.push(`/dash/?email=${value.user?.email}`);
+            }
             setLoading(false);
           })
           .catch((err) => {

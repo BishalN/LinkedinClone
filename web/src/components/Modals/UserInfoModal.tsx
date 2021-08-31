@@ -14,7 +14,6 @@ import {
 } from "./handleUserInfoValidation";
 import { IndustrySelector } from "./Selectors";
 import { useSetInfo } from "../../hooks/useSetInfo";
-import { modalClassName } from "../../utils/modalClassName";
 
 export const UserInfoModal: React.FC<UserInfoValues> = ({
   countryRegion,

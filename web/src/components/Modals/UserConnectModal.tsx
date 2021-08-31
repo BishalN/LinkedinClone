@@ -14,11 +14,13 @@ import { TiTick } from "react-icons/ti";
 type UserConnectmodalProps = {
   userId: string;
   fullName: string;
+  username: string;
 };
 
 export const UserConnectmodal: React.FC<UserConnectmodalProps> = ({
   userId,
   fullName,
+  username,
 }) => {
   const loggedInUserId = firebase.auth().currentUser?.uid;
   const { data: loggedInUser, isLoading: loggedInUserDataLoading } = useQuery(
@@ -57,6 +59,7 @@ export const UserConnectmodal: React.FC<UserConnectmodalProps> = ({
       //this userId is of the person to whom we are sending connection request to
       userId,
       fullName: `${loggedInUser?.firstName} ${loggedInUser?.lastName}`,
+      username,
     });
     if (!isLoading && !error) {
       setIsModalOpen(false);
