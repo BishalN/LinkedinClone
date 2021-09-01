@@ -1,6 +1,6 @@
 import React from 'react';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
-import { Login } from '../src/pages/Login';
+import { Login } from './pages/Login';
 import { Landing } from './pages/Landing';
 import { Profile } from './pages/in/Profile';
 import { Mynetwork } from './pages/mynetwork/MyNetwork';
