@@ -9,9 +9,12 @@ import { Layout } from '../components/Layout';
 import LogoSvg from '../components/LogoSvg';
 import firebase from '../utils/initFirebase';
 import { userPostRegisterActions } from '../utils/userPostRegister';
-import { useHistory } from 'react-router-dom';
+import { useHistory, useParams } from 'react-router-dom';
+import { useIsAuth } from '../hooks/useIsAuthenticated';
 
 export const Login: React.FC = () => {
+  useIsAuth();
+  const params: { next?: string } = useParams();
   const history = useHistory();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -30,9 +33,11 @@ export const Login: React.FC = () => {
         const isNewUser = value.additionalUserInfo?.isNewUser;
         if (isNewUser) {
           await userPostRegisterActions(value);
+          history.push(`/in/${value.user?.uid}`);
         }
 
-        history.push(`/`);
+        if (params.next) history.push(`/${params.next}`);
+        else history.push(`/`);
       })
       .catch((err) => setError(err));
   };
@@ -59,8 +64,8 @@ export const Login: React.FC = () => {
           .auth()
           .signInWithEmailAndPassword(email, password)
           .then((value) => {
-            history.push(`/`);
-            setLoading(false);
+            if (params.next) history.push(`/${params.next}`);
+            else history.push(`/`);
           })
           .catch((err) => {
             setError(err);

@@ -31,7 +31,14 @@ export const ConnectRequestCard: React.FC<ConnectRequestCardProps> = ({
     useRejectConnection();
 
   const handleRejectConnection = async () => {
-    await rejectConnection({ fullName, userId, profileUrl, message, headline });
+    await rejectConnection({
+      fullName,
+      userId,
+      profileUrl,
+      message,
+      headline,
+      username,
+    });
   };
 
   const handleAcceptConnection = async () => {
@@ -42,6 +49,7 @@ export const ConnectRequestCard: React.FC<ConnectRequestCardProps> = ({
       message,
       profileUrl,
       userId,
+      username,
     });
   };
 

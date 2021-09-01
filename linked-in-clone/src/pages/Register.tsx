@@ -28,7 +28,7 @@ export const Register: React.FC = () => {
       .then(async (value) => {
         await userPostRegisterActions(value);
 
-        history.push(`/`);
+        history.push(`/in/${value.user?.uid}`);
       })
       .catch((err) => setError(err));
 
@@ -59,7 +59,7 @@ export const Register: React.FC = () => {
       .then(async (value) => {
         await userPostRegisterActions(value);
         setLoading(false);
-        history.push(`/`);
+        history.push(`/in/${value.user?.uid}`);
       })
       .catch((err) => {
         setError(err);
@@ -97,7 +97,7 @@ export const Register: React.FC = () => {
                 className='w-11/12 border-opacity-50'
               />
               <Input
-                type='text'
+                type='password'
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder='Password'

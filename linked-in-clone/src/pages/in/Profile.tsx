@@ -12,12 +12,13 @@ import { UsernameEditModal } from '../../components/Modals/UsernameEditModal';
 import { useGetUserByUsername } from '../../hooks/useGetUserByUsername';
 import { useState } from 'react';
 import { useMemo } from 'react';
-import { useParams } from 'react-router-dom';
+import { useHistory, useParams } from 'react-router-dom';
 
 export const Profile = () => {
   const { username }: { username: string } = useParams();
   const LoggedInUserId = firebase.auth().currentUser?.uid;
   const { data, isLoading } = useGetUserByUsername(username as string);
+  const history = useHistory();
 
   const [isUserProfile, setIsUserProfile] = useState(false);
 
@@ -59,14 +60,15 @@ export const Profile = () => {
                   {data?.educations[0]?.school}
                 </span>
                 {data?.location} {data?.countryRegion}.{' '}
-                <span className='text-blue-800 inline font-semibold text-base hover:underline cursor-pointer'>
-                  Contact Info
-                </span>
               </p>
 
               {/* connection count */}
-              <span className='text-blue-800 font-semibold text-base hover:underline cursor-pointer'>
-                194 connections
+              <span
+                className='text-blue-800 font-semibold text-base hover:underline cursor-pointer'
+                onClick={() => history.push('/mynetwork/connections')}
+              >
+                {data?.connections.length}{' '}
+                {data?.connections.length > 1 ? 'connections' : 'connection'}
               </span>
             </div>
 

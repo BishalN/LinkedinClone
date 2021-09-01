@@ -1,6 +1,6 @@
-import firebase from "../utils/initFirebase";
-import { useMutation, useQueryClient } from "react-query";
-import { UserEduBack } from "../components/Modals/handleUserEducationValidation";
+import firebase from '../utils/initFirebase';
+import { useMutation, useQueryClient } from 'react-query';
+import { UserEduBack } from '../components/Modals/handleUserEducationValidation';
 
 export const useDelteEducation = () => {
   const queryClient = useQueryClient();
@@ -10,7 +10,7 @@ export const useDelteEducation = () => {
       const uid = firebase.auth().currentUser?.uid;
       return firebase
         .firestore()
-        .collection("users")
+        .collection('users')
         .doc(uid)
         .update({
           educations: firebase.firestore.FieldValue.arrayRemove(edu),
@@ -18,7 +18,7 @@ export const useDelteEducation = () => {
     },
     {
       onSuccess: (data, variables) => {
-        queryClient.invalidateQueries("userInfo");
+        queryClient.invalidateQueries('user');
       },
     }
   );

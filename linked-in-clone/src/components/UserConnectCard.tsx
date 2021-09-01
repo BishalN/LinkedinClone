@@ -28,7 +28,11 @@ export const UserConnectCard: React.FC<UserConnectCardProps> = ({
    ease-in-out duration-200 space-y-2 shadow-md  rounded-xl
     p-4 flex flex-col items-center justify-center cursor-pointer'
     >
-      <img src={profileUrl} alt={fullName} className='rounded-full h-28 w-28' />
+      <img
+        src={profileUrl}
+        alt={fullName}
+        className='rounded-full h-28 w-28 object-cover object-center'
+      />
       <p
         className='text-lg font-semibold text-gray-600 cursor-pointer '
         onClick={() => history.push(`/in/${username}`)}

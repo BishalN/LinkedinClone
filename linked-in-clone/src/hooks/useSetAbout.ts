@@ -1,5 +1,5 @@
-import firebase from "../utils/initFirebase";
-import { useMutation, useQueryClient } from "react-query";
+import firebase from '../utils/initFirebase';
+import { useMutation, useQueryClient } from 'react-query';
 
 export const useSetAbout = () => {
   const queryClient = useQueryClient();
@@ -8,13 +8,13 @@ export const useSetAbout = () => {
       const uid = firebase.auth().currentUser?.uid;
       return firebase
         .firestore()
-        .collection("users")
+        .collection('users')
         .doc(uid)
         .set({ about }, { merge: true });
     },
     {
       onSuccess: (data, variables) => {
-        queryClient.invalidateQueries("userInfo");
+        queryClient.invalidateQueries('user');
       },
     }
   );

@@ -1,5 +1,5 @@
-import firebase from "../utils/initFirebase";
-import { useMutation, useQueryClient } from "react-query";
+import firebase from '../utils/initFirebase';
+import { useMutation, useQueryClient } from 'react-query';
 
 type TypeAcceptConnection = {
   //this data are our side of information that we need to store so that we know we are connected
@@ -8,6 +8,7 @@ type TypeAcceptConnection = {
   headline: string;
   fullName: string;
   message: string;
+  username: string;
   //we also need the same but our own information so that we can save the information in other part of the data
   currentUserId: string;
 };
@@ -22,11 +23,12 @@ export const useAcceptConnection = () => {
       fullName,
       message,
       currentUserId,
+      username,
     }: TypeAcceptConnection) => {
       //adding the data to connections array
       await firebase
         .firestore()
-        .collection("users")
+        .collection('users')
         .doc(currentUserId)
         .update({
           connections: firebase.firestore.FieldValue.arrayUnion(userId),
@@ -36,18 +38,18 @@ export const useAcceptConnection = () => {
       //we nedd the message thing too in order to completely remove the object from the array
       await firebase
         .firestore()
-        .collection("users")
+        .collection('users')
         .doc(currentUserId)
         .update({
           connectionRequestsReceived: firebase.firestore.FieldValue.arrayRemove(
-            { userId, profileUrl, headline, fullName, message }
+            { userId, profileUrl, headline, fullName, message, username }
           ),
         });
 
       //updating the other part of the data
       return firebase
         .firestore()
-        .collection("users")
+        .collection('users')
         .doc(userId)
         .update({
           connections: firebase.firestore.FieldValue.arrayUnion(currentUserId),
@@ -55,7 +57,7 @@ export const useAcceptConnection = () => {
     },
     {
       onSuccess: (data, variables) => {
-        queryClient.invalidateQueries("userInfo");
+        queryClient.invalidateQueries('userInfo');
       },
     }
   );

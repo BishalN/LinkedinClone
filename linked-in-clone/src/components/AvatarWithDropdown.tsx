@@ -6,6 +6,7 @@ import firebase from '../utils/initFirebase';
 import { Button } from './Button';
 import { useHistory } from 'react-router-dom';
 import { useQueryClient } from 'react-query';
+import { DEFAULT_USER_AVATAR } from '../utils/avatar';
 
 type AvatarWithDropDownProps = {
   fullName: string;
@@ -34,9 +35,9 @@ export const AvatarWithDropDown: React.FC<AvatarWithDropDownProps> = ({
         <div className='bg-white rounded-md border-2 drop-shadow-sm '>
           <div className='flex justify-center items-center space-x-2 px-2 py-2'>
             <img
-              src={profileUrl || 'https://picsum.photos/id/237/200/300'}
+              src={profileUrl || DEFAULT_USER_AVATAR}
               alt='MyPic'
-              className='rounded-full h-14 w-14'
+              className='rounded-full h-14 w-14 object-cover'
             />
             <div>
               <h4 className='font-semibold text-gray-600 text-lg uppercase'>
@@ -76,7 +77,7 @@ export const AvatarWithDropDown: React.FC<AvatarWithDropDownProps> = ({
                 onClick={async () => {
                   await firebase.auth().signOut();
                   queryCient.clear();
-                  history.push('/login');
+                  history.push('/');
                 }}
               >
                 Sign Out
@@ -91,7 +92,7 @@ export const AvatarWithDropDown: React.FC<AvatarWithDropDownProps> = ({
         onClick={() => setIsPopoverOpen(!isPopoverOpen)}
       >
         <img
-          src={profileUrl || 'https://picsum.photos/id/237/200/300'}
+          src={profileUrl || DEFAULT_USER_AVATAR}
           alt='MyPic'
           className='rounded-full h-10 w-10'
         />

@@ -16,7 +16,7 @@ export const NavBar: React.FC = () => {
   const history = useHistory();
 
   return (
-    <nav className='bg-white mt-1 border-gray-200 border-b-2  sm:px-4 flex items-center justify-between overflow-hidden xl:px-16'>
+    <nav className='bg-white border-b-2  sm:px-4 flex items-center justify-between overflow-hidden xl:px-16'>
       <SearchBarWithLogo />
 
       <div className='flex space-x-10'>

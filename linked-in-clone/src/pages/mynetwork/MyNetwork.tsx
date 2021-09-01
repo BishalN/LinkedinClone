@@ -5,11 +5,11 @@ import { LoggedInLayout } from '../../components/LoggedInLayout';
 import { Spinner } from '../../components/Spinner';
 import { UserConnectCard } from '../../components/UserConnectCard';
 import { useGetAllUsers } from '../../hooks/useGetAllUsers';
-import { useIsAuth } from '../../hooks/useIsAuthenticated';
+import { useRedirectIfNotLoggedIn } from '../../hooks/useRedirectIfNotLoggedIn';
 import { getUserInfo } from '../../utils/queryFunctions';
 
 export const Mynetwork: React.FC = () => {
-  useIsAuth();
+  useRedirectIfNotLoggedIn();
   const history = useHistory();
   const { data: usersData, isLoading: usersDataLoading } = useGetAllUsers();
   const { data: loggedInUser, isLoading: loggedInUserDataLoading } = useQuery(

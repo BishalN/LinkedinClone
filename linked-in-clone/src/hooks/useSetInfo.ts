@@ -16,7 +16,7 @@ export const useSetInfo = () => {
     {
       onSuccess: (data, variables) => {
         console.log(data);
-        queryClient.invalidateQueries('userInfo');
+        queryClient.invalidateQueries('user');
       },
     }
   );

@@ -18,7 +18,7 @@ export const useSetExperience = () => {
     },
     {
       onSuccess: (data, variables) => {
-        queryClient.invalidateQueries('userInfo');
+        queryClient.invalidateQueries('user');
       },
     }
   );

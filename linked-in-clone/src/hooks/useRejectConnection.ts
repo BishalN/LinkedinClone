@@ -1,5 +1,5 @@
-import firebase from "../utils/initFirebase";
-import { useMutation, useQueryClient } from "react-query";
+import firebase from '../utils/initFirebase';
+import { useMutation, useQueryClient } from 'react-query';
 
 type TypeRejectConnection = {
   userId: string;
@@ -7,6 +7,7 @@ type TypeRejectConnection = {
   headline: string;
   fullName: string;
   message: string;
+  username: string;
 };
 
 //just remove the data from the connection Received array
@@ -19,23 +20,24 @@ export const useRejectConnection = () => {
       headline,
       fullName,
       message,
+      username,
     }: TypeRejectConnection) => {
-      console.log("here we are rejecting");
+      console.log('here we are rejecting');
       //removing the data from the connections requests array
       const loggedInUserId = firebase.auth().currentUser?.uid;
       return firebase
         .firestore()
-        .collection("users")
+        .collection('users')
         .doc(loggedInUserId)
         .update({
           connectionRequestsReceived: firebase.firestore.FieldValue.arrayRemove(
-            { userId, profileUrl, headline, fullName, message }
+            { userId, profileUrl, headline, fullName, message, username }
           ),
         });
     },
     {
       onSuccess: (data, variables) => {
-        queryClient.invalidateQueries("userInfo");
+        queryClient.invalidateQueries('userInfo');
       },
     }
   );

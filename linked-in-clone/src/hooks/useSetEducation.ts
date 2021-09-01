@@ -1,6 +1,6 @@
-import firebase from "../utils/initFirebase";
-import { useMutation, useQueryClient } from "react-query";
-import { UserEduBack } from "../components/Modals/handleUserEducationValidation";
+import firebase from '../utils/initFirebase';
+import { useMutation, useQueryClient } from 'react-query';
+import { UserEduBack } from '../components/Modals/handleUserEducationValidation';
 
 export const useSetEducation = () => {
   const queryClient = useQueryClient();
@@ -9,7 +9,7 @@ export const useSetEducation = () => {
       const uid = firebase.auth().currentUser?.uid;
       return firebase
         .firestore()
-        .collection("users")
+        .collection('users')
         .doc(uid)
         .update({
           educations: firebase.firestore.FieldValue.arrayUnion(edu),
@@ -18,7 +18,7 @@ export const useSetEducation = () => {
     {
       onSuccess: (data, variables) => {
         console.log(data);
-        queryClient.invalidateQueries("userInfo");
+        queryClient.invalidateQueries('user');
       },
     }
   );

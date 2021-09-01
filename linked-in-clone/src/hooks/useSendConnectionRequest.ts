@@ -1,5 +1,5 @@
-import firebase from "../utils/initFirebase";
-import { useMutation, useQueryClient } from "react-query";
+import firebase from '../utils/initFirebase';
+import { useMutation, useQueryClient } from 'react-query';
 
 type TypeSendConnectionRequest = {
   userId: string;
@@ -32,27 +32,25 @@ export const useSendConnectionRequest = () => {
       };
       await firebase
         .firestore()
-        .collection("users")
+        .collection('users')
         .doc(userId)
         .update({
-          connectionRequestsReceived: firebase.firestore.FieldValue.arrayUnion(
-            connectionData
-          ),
+          connectionRequestsReceived:
+            firebase.firestore.FieldValue.arrayUnion(connectionData),
         });
 
       return firebase
         .firestore()
-        .collection("users")
+        .collection('users')
         .doc(LoggedInUserId)
         .update({
-          connectionRequestsSent: firebase.firestore.FieldValue.arrayUnion(
-            userId
-          ),
+          connectionRequestsSent:
+            firebase.firestore.FieldValue.arrayUnion(userId),
         });
     },
     {
       onSuccess: (data, variables) => {
-        queryClient.invalidateQueries("userInfo");
+        queryClient.invalidateQueries('userInfo');
       },
     }
   );

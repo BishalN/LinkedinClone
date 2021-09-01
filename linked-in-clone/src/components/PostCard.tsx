@@ -12,6 +12,7 @@ import { v4 as uuidGen } from 'uuid';
 import { useGetAllComments } from '../hooks/useGetAllComments';
 import { EditCommentModal } from './Modals/EditCommentModal';
 import { UserConfirmDeleteModal } from './Modals/UserConfirmDeleteModal';
+import { Link, useHistory } from 'react-router-dom';
 
 type PostCardProps = {
   creatorId: string;
@@ -21,6 +22,7 @@ type PostCardProps = {
   likes: Array<string>;
   loggedInUserProfile: string;
   loggedInUserFullName: string;
+  loggedInUsername: string;
 };
 
 export const PostCard: React.FC<PostCardProps> = ({
@@ -30,6 +32,7 @@ export const PostCard: React.FC<PostCardProps> = ({
   uuid,
   loggedInUserProfile,
   loggedInUserFullName,
+  loggedInUsername,
 }) => {
   //information about the user who posted the post
   const { data: postCreator, isLoading } = useGetUserInfo(creatorId);
@@ -45,6 +48,7 @@ export const PostCard: React.FC<PostCardProps> = ({
   const [commentShow, setCommentShow] = useState(false);
   const [comment, setComment] = useState('');
   const [commentError, setCommentError] = useState('');
+  const history = useHistory();
 
   const loggedInUserId = firebase.auth().currentUser?.uid;
 
@@ -73,13 +77,18 @@ export const PostCard: React.FC<PostCardProps> = ({
   return (
     <div className='px-4 py-3 w-full mt-5 shadow-sm border-2 border-gray-200 h-auto bg-white rounded-lg space-y-2'>
       <div className='flex space-x-2 items-center'>
-        <img
-          src={postCreator?.profilePictureUrl}
-          alt={postCreator?.firstName}
-          className='w-16 h-16 rounded-full'
-        />
+        <Link to={`/in/${postCreator?.username}`}>
+          <img
+            src={postCreator?.profilePictureUrl}
+            alt={postCreator?.firstName}
+            className='w-16 h-16 rounded-full object-cover'
+          />
+        </Link>
         <div className=''>
-          <p className='text-gray-700 font-semibold'>
+          <p
+            className='text-gray-700 font-semibold hover:underline cursor-pointer'
+            onClick={() => history.push(`/in/${postCreator?.username}`)}
+          >
             {postCreator?.firstName} {postCreator?.lastName}
           </p>
           <p className='text-gray-500 text-xs'>{postCreator?.headLine}</p>

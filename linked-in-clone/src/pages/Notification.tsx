@@ -2,9 +2,11 @@ import { useQuery } from 'react-query';
 import { ConnectRequestCard } from '../components/ConnectRequestCard';
 import { LoggedInLayout } from '../components/LoggedInLayout';
 import { Spinner } from '../components/Spinner';
+import { useRedirectIfNotLoggedIn } from '../hooks/useRedirectIfNotLoggedIn';
 import { getUserInfo } from '../utils/queryFunctions';
 
 export const Notification: React.FC = () => {
+  useRedirectIfNotLoggedIn();
   const { data: userData, isLoading } = useQuery('userInfo', getUserInfo);
   if (isLoading) {
     return <Spinner size='4' />;

@@ -33,13 +33,13 @@ export const Landing: React.FC = () => {
           message='Post successfully published'
         />
       )}
-      <div className='h-auto mb-10'>
+      <div className='h-full mb-10'>
         <div className='px-2 py-3 w-full mt-5 shadow-sm border-2 border-gray-200 h-24 bg-white rounded-lg'>
           <div className='flex space-x-2 items-center'>
             <img
               src={data?.profilePictureUrl}
               alt={data?.firstName}
-              className='w-16 h-16 rounded-full'
+              className='w-16 h-16 rounded-full object-cover'
             />
             <UserPostModal />
           </div>
@@ -50,6 +50,7 @@ export const Landing: React.FC = () => {
             creatorId={post?.creatorId}
             loggedInUserFullName={`${data?.firstName} ${data?.lastName}`}
             loggedInUserProfile={data?.profilePictureUrl}
+            loggedInUsername={data?.username}
             post={post?.post}
             uuid={post?.uuid}
             likes={post?.likes}

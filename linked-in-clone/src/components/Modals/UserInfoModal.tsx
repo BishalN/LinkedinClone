@@ -14,6 +14,7 @@ import {
 } from './handleUserInfoValidation';
 import { IndustrySelector } from './Selectors';
 import { useSetInfo } from '../../hooks/useSetInfo';
+import { useEffect } from 'react';
 
 export const UserInfoModal: React.FC<UserInfoValues> = ({
   countryRegion,
@@ -28,6 +29,11 @@ export const UserInfoModal: React.FC<UserInfoValues> = ({
   const [isModalOpen, setIsModalOpen] = useState(false);
   const { mutateAsync, error, isLoading } = useSetInfo();
 
+  useEffect(() => {
+    if (firstName === '') {
+      setIsModalOpen(true);
+    }
+  }, [firstName]);
   return (
     <div>
       <IconWithHover
@@ -36,7 +42,7 @@ export const UserInfoModal: React.FC<UserInfoValues> = ({
             size={25}
             color='#4B5563'
             onClick={() => setIsModalOpen(true)}
-            className='cursor-pointer'
+            className={`cursor-pointer`}
           />
         }
       />
@@ -188,12 +194,7 @@ export const UserInfoModal: React.FC<UserInfoValues> = ({
               />
 
               <div className='flex justify-end'>
-                <Button
-                  variant='filled'
-                  type='submit'
-                  className=''
-                  loading={isSubmitting}
-                >
+                <Button variant='filled' type='submit' loading={isSubmitting}>
                   Save
                 </Button>
               </div>

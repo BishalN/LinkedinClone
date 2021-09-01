@@ -1,11 +1,12 @@
-import React, { useState } from "react";
-import Modal from "react-modal";
-import { AiOutlineClose } from "react-icons/ai";
-import { MdAddAPhoto } from "react-icons/md";
-import { IconWithHover } from "./IconWithHover";
-import { Button } from "../Button";
-import firebase from "../../utils/initFirebase";
-import { useQueryClient } from "react-query";
+import React, { useState } from 'react';
+import Modal from 'react-modal';
+import { AiOutlineClose } from 'react-icons/ai';
+import { MdAddAPhoto } from 'react-icons/md';
+import { IconWithHover } from './IconWithHover';
+import { Button } from '../Button';
+import firebase from '../../utils/initFirebase';
+import { useQueryClient } from 'react-query';
+import { DEFAULT_USER_AVATAR } from '../../utils/avatar';
 
 type UserPhotoModalProps = {
   profileUrl: string;
@@ -22,36 +23,36 @@ export const UserPhotoModal: React.FC<UserPhotoModalProps> = ({
   return (
     <>
       <img
-        src={profileUrl}
+        src={profileUrl || DEFAULT_USER_AVATAR}
         alt={firstName}
         onClick={() => setIsModalOpen(true)}
-        className="rounded-full h-36 w-36 -mt-20 ring-4 ring-white"
+        className='rounded-full h-36 w-36 -mt-20 ring-4 ring-white object-cover object-center'
       />
 
       <Modal
         isOpen={isModalOpen}
         onRequestClose={() => setIsModalOpen(false)}
-        className="h-full w-full sm:h-5/6 sm:mx-auto sm:mt-10 p-2 sm:w-9/12 right-auto bottom-auto  bg-gray-900 border-none overflow-hidden"
-        overlayClassName="Overlay"
-        contentLabel="Edit Intro"
+        className='h-full w-full sm:h-5/6 sm:mx-auto sm:mt-10 p-2 sm:w-9/12 right-auto bottom-auto  bg-gray-900 border-none overflow-hidden'
+        overlayClassName='Overlay'
+        contentLabel='Edit Intro'
       >
-        <div className="flex justify-between">
-          <p className="text-xl font-medium text-gray-300 mb-3">
+        <div className='flex justify-between'>
+          <p className='text-xl font-medium text-gray-300 mb-3'>
             Profile photo
           </p>
           <AiOutlineClose
             size={25}
-            color="#9CA3AF"
-            className="cursor-pointer"
+            color='#9CA3AF'
+            className='cursor-pointer'
             onClick={() => setIsModalOpen(false)}
           />
         </div>
 
-        <div className="flex justify-center h-5/6 items-center">
+        <div className='flex justify-center h-5/6 items-center'>
           <img
-            src={profileUrl}
+            src={profileUrl || DEFAULT_USER_AVATAR}
             alt={firstName}
-            className="rounded-full h-44 w-44 -mt-20 "
+            className='rounded-full h-44 w-44 -mt-20 object-cover'
           />
         </div>
 
@@ -71,7 +72,7 @@ const UserPhotoUploadModal: React.FC<UserPhotoUploadModalProps> = ({
   profileUrl,
 }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [imageUrl, setImageUrl] = useState("");
+  const [imageUrl, setImageUrl] = useState('');
   const [imgFile, setImgFile] = useState<File>();
   const [loading, setLoading] = useState(false);
   const queryClient = useQueryClient();
@@ -80,67 +81,67 @@ const UserPhotoUploadModal: React.FC<UserPhotoUploadModalProps> = ({
     setLoading(true);
     const uid = firebase.auth().currentUser?.uid;
     const storageRef = firebase.storage().ref();
-    const imageRef = storageRef.child("images");
+    const imageRef = storageRef.child('images');
     const profileRef = imageRef.child(imgFile?.name!);
     await profileRef.put(imgFile!);
     const profileUrl = await profileRef.getDownloadURL();
     // update the user profile Picture url
     await firebase
       .firestore()
-      .collection("users")
+      .collection('users')
       .doc(uid)
       .set({ profilePictureUrl: profileUrl }, { merge: true });
     setLoading(false);
     //update the cache to use new Image
-    queryClient.invalidateQueries("userInfo");
+    queryClient.invalidateQueries('user');
     setIsModalOpen(false);
   };
 
   return (
     <>
       <div
-        className="flex flex-col items-center cursor-pointer"
+        className='flex flex-col items-center cursor-pointer'
         onClick={() => setIsModalOpen(true)}
       >
-        <MdAddAPhoto size={25} color="white" />
-        <span className="text-gray-400 ">Add Photo</span>
+        <MdAddAPhoto size={25} color='white' />
+        <span className='text-gray-400 '>Add Photo</span>
       </div>
 
       <Modal
         isOpen={isModalOpen}
         onRequestClose={() => setIsModalOpen(false)}
-        className="h-full w-full sm:h-5/6 sm:mx-auto sm:mt-10 p-2 sm:w-9/12 right-auto bottom-auto  bg-gray-50  overflow-hidden"
-        overlayClassName="Overlay"
-        contentLabel="Edit Intro"
+        className='h-full w-full sm:h-5/6 sm:mx-auto sm:mt-10 p-2 sm:w-9/12 right-auto bottom-auto  bg-gray-50  overflow-hidden'
+        overlayClassName='Overlay'
+        contentLabel='Edit Intro'
       >
-        <div className="flex justify-between">
-          <p className="text-xl font-medium mb-3 text-gray-500">Change Photo</p>
+        <div className='flex justify-between'>
+          <p className='text-xl font-medium mb-3 text-gray-500'>Change Photo</p>
           <IconWithHover
             Icon={
               <AiOutlineClose
                 size={25}
-                color="#9CA3AF"
-                className="cursor-pointer"
+                color='#9CA3AF'
+                className='cursor-pointer'
                 onClick={() => setIsModalOpen(false)}
               />
             }
           />
         </div>
-        <div className="border-b-2 border-gray-50"></div>
+        <div className='border-b-2 border-gray-50'></div>
 
-        <div className="flex space-y-10 flex-col justify-center items-center">
-          <h3 className="text-2xl mt-5">{firstName} Keep your profile fresh</h3>
+        <div className='flex space-y-10 flex-col justify-center items-center'>
+          <h3 className='text-2xl mt-5'>{firstName} Keep your profile fresh</h3>
           <img
-            src={imageUrl || profileUrl}
-            alt="Username"
-            className="rounded-full h-32 w-32"
+            src={imageUrl || profileUrl || DEFAULT_USER_AVATAR}
+            alt='Username'
+            className='rounded-full h-32 w-32 object-cover'
           />
         </div>
 
-        <div className="flex flex-col items-center mt-10">
+        <div className='flex flex-col items-center mt-10'>
           {imageUrl ? (
             <Button
-              variant="filled"
+              variant='filled'
               loading={loading}
               onClick={() => handleUpload()}
             >
@@ -148,23 +149,23 @@ const UserPhotoUploadModal: React.FC<UserPhotoUploadModalProps> = ({
             </Button>
           ) : (
             <label
-              htmlFor="fileUpload"
-              className="border-2 rounded-full text-center border-blue-500 w-40 p-2 hover:bg-gray-200"
+              htmlFor='fileUpload'
+              className='border-2 rounded-full text-center border-blue-500 w-40 p-2 hover:bg-gray-200'
             >
-              {imageUrl ? "Save Changes" : "Upload photo"}
+              {imageUrl ? 'Save Changes' : 'Upload photo'}
             </label>
           )}
 
           <input
-            type="file"
+            type='file'
             onChange={(e) => {
               const url = URL.createObjectURL(e.target.files![0]);
               setImageUrl(url);
               setImgFile(e.target.files![0]);
             }}
-            id="fileUpload"
-            className="appearance-none invisible"
-            placeholder="Upload photo"
+            id='fileUpload'
+            className='appearance-none invisible'
+            placeholder='Upload photo'
           />
         </div>
       </Modal>
