@@ -1,4 +1,3 @@
-import firebase from '../utils/initFirebase';
 import React from 'react';
 import { useQuery } from 'react-query';
 import { Alert } from '../components/Alert';
