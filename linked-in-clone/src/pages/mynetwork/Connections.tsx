@@ -12,7 +12,7 @@ export const Connection: React.FC = () => {
 
   return (
     <LoggedInLayout>
-      <div className='bg-white mt-5 p-4 rounded-lg border-2 border-gray-200 space-y-7'>
+      <div className='bg-white p-2 rounded-lg border-2 border-gray-200 space-y-7'>
         <h2 className='text-xl text-gray-600'>
           {data?.length} {data && data.length > 1 && 'Connections'}
           {data && data.length <= 1 && 'Connection'}

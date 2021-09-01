@@ -6,6 +6,7 @@ import { useQuery } from 'react-query';
 import { Popover } from 'react-tiny-popover';
 import { Spinner } from './Spinner';
 import { ConnectionCard } from './ConnectionCard';
+import { Link } from 'react-router-dom';
 
 export const SearchBarWithLogo = () => {
   const [isPopoverOpen, setIsPopoverOpen] = useState(false);
@@ -23,7 +24,8 @@ export const SearchBarWithLogo = () => {
         .get();
       usersnapshots.forEach((doc) => users.push(doc.data()));
       return users;
-    }
+    },
+    { enabled: searchText.length > 1, refetchOnMount: false }
   );
 
   console.log(foundUsers);
@@ -56,7 +58,9 @@ export const SearchBarWithLogo = () => {
       )}
     >
       <div className='flex space-x-2'>
-        <FaLinkedin size={40} color='#3B82F6' />
+        <Link to='/'>
+          <FaLinkedin size={40} color='#3B82F6' className='cursor-pointer' />
+        </Link>
         <div className='bg-gray-200 hidden items-center rounded-md lg:flex'>
           <ImSearch size={30} color='#6B7280' className='inline ml-2 py-2' />
           <input
