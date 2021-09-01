@@ -13,11 +13,14 @@ import { useGetUserByUsername } from '../../hooks/useGetUserByUsername';
 import { useState } from 'react';
 import { useMemo } from 'react';
 import { useHistory, useParams } from 'react-router-dom';
+import { useGetMyPosts } from '../../hooks/useGetMyPosts';
+import { AiFillLike } from 'react-icons/ai';
 
 export const Profile = () => {
   const { username }: { username: string } = useParams();
   const LoggedInUserId = firebase.auth().currentUser?.uid;
   const { data, isLoading } = useGetUserByUsername(username as string);
+  const { data: mypostData, isLoading: myPostLoading } = useGetMyPosts();
   const history = useHistory();
 
   const [isUserProfile, setIsUserProfile] = useState(false);
@@ -28,7 +31,7 @@ export const Profile = () => {
     }
   }, [LoggedInUserId, data, isLoading]);
 
-  if (isLoading) {
+  if (isLoading || myPostLoading) {
     return <Spinner size='4' />;
   }
 
@@ -126,37 +129,25 @@ export const Profile = () => {
         <div className='flex flex-col'>
           <h1 className='text-xl font-medium text-gray-700'>Activity</h1>
           <span className='text-blue-600 font-semibold hover:underline cursor-pointer'>
-            192 followers
+            {data.connections.length}{' '}
+            {data.connections.length > 1 ? 'followers' : 'follower'}
           </span>
         </div>
 
         {/* real activity */}
-        <div className='flex space-x-2'>
-          <img
-            src='https://picsum.photos/id/237/200/300'
-            alt='a cat'
-            className='h-20 w-20 object-cover'
-          />
-          <div>
-            <h4 className='text-lg text-gray-700 font-semibold'>
-              Just finished working on new project with my friend bob
-            </h4>
-            <span className='text-gray-400'>Bishal Shared this</span>
-          </div>
-        </div>
-
-        <div className='flex space-x-2'>
-          <img
-            src='https://picsum.photos/id/237/200/300'
-            alt='a cat'
-            className='h-20 w-20 object-cover'
-          />
-          <div>
-            <h4 className='text-lg text-gray-700 font-semibold'>
-              Just finished working on new project with my friend bob
-            </h4>
-            <span className='text-gray-400'>Bishal Shared this</span>
-          </div>
+        <div className='flex flex-col space-y-5'>
+          {mypostData?.map((post) => (
+            <div>
+              <h4 className='text-lg text-gray-700 font-semibold space-x-2'>
+                <span>{post.post} </span>
+                <span className='text-base text-gray-500'>
+                  {post.likes.length}{' '}
+                  <AiFillLike className='inline ml-1' size={20} />
+                </span>
+              </h4>
+              <span className='text-gray-400'>Bishal Shared this</span>
+            </div>
+          ))}
         </div>
       </section>
 

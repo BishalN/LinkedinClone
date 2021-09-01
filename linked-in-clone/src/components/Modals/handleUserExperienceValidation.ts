@@ -75,35 +75,37 @@ export const handleUserExperienceValidation = ({
   const startDate = new Date(Number(startYear), getMonthFromString(startMonth));
   const endDate = new Date(Number(endYear), getMonthFromString(endMonth));
 
-  if (startDate > endDate) {
-    error.endMonth = "End date should be after start date";
-    error.startMonth = "End date should be after start date";
+  if (!isStillOnRole && startDate > endDate) {
+    error.endMonth = 'End date should be after start date';
+    error.startMonth = 'End date should be after start date';
   }
 
   if (startMonth?.length === 0)
-    error.startMonth = "Please select the start month";
-  if (startYear?.length === 0) error.startYear = "Please select the start year";
-  if (endYear?.length === 0) error.endYear = "Please select the end year";
-  if (endMonth?.length === 0) error.endMonth = "Please select the end month";
-  if (location?.length === 0) error.location = "Please enter your location";
-  if (Industry?.length === 0) error.Industry = "Please enter your Industry";
-  if (headLine?.length === 0) error.headLine = "Please enter your head line";
-  if (title?.length === 0) error.title = "Please enter your title";
+    error.startMonth = 'Please select the start month';
+  if (startYear?.length === 0) error.startYear = 'Please select the start year';
+  if (!isStillOnRole && endYear?.length === 0)
+    error.endYear = 'Please select the end year';
+  if (!isStillOnRole && endMonth?.length === 0)
+    error.endMonth = 'Please select the end month';
+  if (location?.length === 0) error.location = 'Please enter your location';
+  if (Industry?.length === 0) error.Industry = 'Please enter your Industry';
+  if (headLine?.length === 0) error.headLine = 'Please enter your head line';
+  if (title?.length === 0) error.title = 'Please enter your title';
   if (description?.length === 0)
-    error.description = "Please enter your description";
+    error.description = 'Please enter your description';
   if (employmentType?.length === 0)
-    error.employmentType = "Please enter your employmentType";
+    error.employmentType = 'Please enter your employmentType';
   if (companyName?.length === 0)
-    error.companyName = "Please enter your company name";
+    error.companyName = 'Please enter your company name';
   if (isStillOnRole && endMonth)
     error.isStillOnRole =
-      "You are still on role so end date should not be there";
+      'You are still on role so end date should not be there';
 
   return error;
 };
 
 export function getMonthFromString(mon: string) {
-  let d = Date.parse(mon + "1, 2012");
+  let d = Date.parse(mon + '1, 2012');
   if (!isNaN(d)) {
     return new Date(d).getMonth() + 1;
   }

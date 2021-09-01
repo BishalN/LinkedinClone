@@ -22,6 +22,7 @@ export const Connection: React.FC = () => {
             fullName={`${connection.firstName} ${connection.lastName}`}
             profileUrl={connection.profilePictureUrl}
             headline={connection.headLine}
+            username={connection.username}
           />
         ))}
       </div>
