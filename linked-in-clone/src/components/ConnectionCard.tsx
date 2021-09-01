@@ -7,6 +7,7 @@ type ConnectionCardProps = {
   headline: string;
   profileUrl: string;
   username: string;
+  isSearchBar?: boolean;
 };
 
 export const ConnectionCard: React.FC<ConnectionCardProps> = ({
@@ -14,6 +15,7 @@ export const ConnectionCard: React.FC<ConnectionCardProps> = ({
   headline,
   profileUrl,
   username,
+  isSearchBar = false,
 }) => {
   const history = useHistory();
   return (
@@ -23,7 +25,11 @@ export const ConnectionCard: React.FC<ConnectionCardProps> = ({
           <img
             src={profileUrl}
             alt={fullName}
-            className='rounded-full h-14 w-14  sm:h-24 sm:w-24 object-cover'
+            className={`${
+              isSearchBar
+                ? 'h-10 w-10 rounded-full object-cover'
+                : 'h-14 w-14 sm:h-24 sm:w-24 object-cover'
+            }`}
           />
         </Link>
         <div className=''>
@@ -37,9 +43,11 @@ export const ConnectionCard: React.FC<ConnectionCardProps> = ({
         </div>
       </div>
 
-      <Button variant='outlined' className='self-start rounded-full'>
-        Message
-      </Button>
+      {!isSearchBar && (
+        <Button variant='outlined' className='self-start rounded-full'>
+          Message
+        </Button>
+      )}
     </div>
   );
 };

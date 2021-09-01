@@ -4,11 +4,11 @@ import { BiMessageRoundedDetail } from 'react-icons/bi';
 import { IoMdNotifications } from 'react-icons/io';
 import { BsBoundingBoxCircles } from 'react-icons/bs';
 import { IconWithText } from './IconWithText';
-import { SearchBarWithLogo } from './SearchBarWithLogo';
 import { AvatarWithDropDown } from './AvatarWithDropdown';
 import { useQuery } from 'react-query';
 import { getUserInfo } from '../utils/queryFunctions';
 import { useHistory } from 'react-router-dom';
+import { SearchBarWithLogo } from './SearchBarWithLogo';
 
 export const NavBar: React.FC = () => {
   const { data } = useQuery('userInfo', getUserInfo);
